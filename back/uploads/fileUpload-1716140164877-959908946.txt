@@ -1,0 +1,136 @@
+=================================================================================================================================
+asta am primit la laborator
+
+
+
+
+problema 4: partial functionala
+
+Problema 4.
+
+Creati triggere care sa modifice o tabela de LOGuri atunci cand se face o operatie (insert/update/delete) in tabelul de note, asupra valorii. In acest tabel de LOGuri vor fi stocate ID-ul notei, vechea valoare, noua valoare, tipul operatiei si momentul in care s-a executat operatia si de catre cine (userul curent autentificat - SELECT USER FROM DUAL).
+Campul updated_at din tabelul note va fi modificat in conformitate (cu noul timp).
+Aceste operatii de modificare se vor efectua doar daca minutul sistemului este unul impar.
+Construiti triggere care sa nu permita modificarea, stergerea informatiilor din tabelul log si nici stergerea in intregime a acestui tabel.
+
+
+DROP TRIGGER prevent_drop_logs;/
+DROP TRIGGER anti_tamper_logs;/
+
+DROP TABLE CUSTOM_LOGS CASCADE CONSTRAINTS;/
+CREATE TABLE CUSTOM_LOGS (
+    id INT NOT NULL,
+    id_nota NUMBER NOT NULL,
+    val_old NUMBER(2,0),
+    val_new NUMBER(2,0),
+    tip_operatie varchar(10) NOT NULL,
+    updated_at DATE NOT NULL,
+    user_type varchar2(30)
+);
+/
+--1
+CREATE OR REPLACE TRIGGER log_insert_delete_note
+   BEFORE INSERT OR DELETE ON note
+   FOR EACH ROW
+DECLARE
+     v_max_id CUSTOM_LOGS.id%type;
+     v_user varchar2(30);
+begin
+
+    IF (MOD(TO_CHAR(SYSDATE, 'MI'), 2) = 1) then--punctul 3
+
+        SELECT USER into v_user FROM DUAL;
+        
+        select count(id)+1 into v_max_id from custom_logs;
+        
+        CASE
+            WHEN INSERTING THEN
+                INSERT INTO CUSTOM_LOGS VALUES(v_max_id, :new.id, null, :new.valoare, 'insert', sysdate, v_user);
+            WHEN DELETING THEN
+                INSERT INTO CUSTOM_LOGS VALUES(v_max_id, :old.id, :old.valoare, null, 'delete', sysdate, v_user);
+        END CASE;
+  
+    end if;
+  
+end;
+/
+
+CREATE OR REPLACE TRIGGER log_update_note  
+FOR UPDATE ON NOTE
+COMPOUND TRIGGER
+    v_max_id CUSTOM_LOGS.id%type;
+    v_user varchar2(30);
+    
+    BEFORE STATEMENT IS
+    BEGIN
+        select count(id)+1 into v_max_id from custom_logs;
+    END BEFORE STATEMENT;
+    
+    BEFORE EACH ROW IS 
+    BEGIN
+        IF (MOD(TO_CHAR(SYSDATE, 'MI'), 2) = 1) then --atenie ca if-ul asta se tine de treaba, deci fiti atenti la minut
+            SELECT USER into v_user FROM DUAL;
+            INSERT INTO CUSTOM_LOGS VALUES(v_max_id, :old.id, :old.valoare, :new.valoare, 'update', sysdate, v_user);
+        end if;
+    END BEFORE EACH ROW;
+  
+    AFTER EACH ROW IS
+    BEGIN
+        UPDATE NOTE SET updated_at = sysdate where id=:new.id; --punctul 2
+    END AFTER EACH ROW;
+    
+END;
+
+
+
+
+
+--punctul 4
+--CREATE OR REPLACE TRIGGER anti_drop_logs
+--    BEFORE DROP ON student.SCHEMA
+--BEGIN
+--    RAISE_APPLICATION_ERROR (
+--      num => -20000,
+--      msg => 'can''t touch this');
+--END;
+
+CREATE OR REPLACE TRIGGER prevent_drop_logs
+BEFORE DROP ON student.SCHEMA
+DECLARE
+  v_object_name VARCHAR2(30);
+BEGIN
+  SELECT object_name INTO v_object_name FROM user_objects WHERE object_type = 'TABLE' AND object_name = 'CUSTOM_LOGS';
+
+  IF v_object_name = 'CUSTOM_LOGS' THEN
+    RAISE_APPLICATION_ERROR(-20001, 'The employees table cannot be dropped.');
+  END IF;
+END;
+/
+  
+CREATE OR REPLACE TRIGGER anti_tamper_logs
+    BEFORE INSERT OR UPDATE OR DELETE ON CUSTOM_LOGS
+BEGIN
+    RAISE_APPLICATION_ERROR (
+      num => -20000,
+      msg => 'can''t touch this');
+END;
+  
+  
+--tests
+
+DELETE FROM NOTE where id_student=1026;/
+DELETE FROM STUDENTI where id=1026;/
+INSERT INTO STUDENTI VALUES(1026,'807GV6','Nume','Prenume', 1, 'A7', null, null, null,null,null);
+
+INSERT INTO NOTE VALUES(16273, 1026, 1,10, sysdate, sysdate, sysdate);
+UPDATE NOTE SET valoare=4 where id_student=1026 and id_curs=1;
+DELETE FROM NOTE WHERE id_student=1026;
+
+DROP TABLE CUSTOM_LOGS;
+DELETE FROM CUSTOM_LOGS WHERE id=1;
+  
+select * from custom_logs;
+  
+  
+
+  

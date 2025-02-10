@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing Platform</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <header>
+        <img src="./Poze/rocket-256.png" alt="Logo" class="logo">
+        <form action="/search" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        <a href="CreateAccount.html" class="user-icon-link" aria-label="User profile">
+            <img src="./Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+      
+    </header>
+
+    <aside class="sidebar-left">
+        <a href="guest.html">
+            <button class="home-btn">Home</button>
+        </a>
+        <button class="additional-info-btn">Help</button>
+        <a href="AboutUsGuest.html">
+            <button class="additional-info-btn">About us</button> 
+        </a>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Your uploads:</h1>
+            <div class="upload-info">
+                <span class="description-label">description</span>
+                <span class="upload-data-label">upload data</span>
+            </div>
+        </section>
+        <div class="upload-duration">your code will be available on the website for 30 days</div>
+    </main>
+
+    <footer>
+      <!-- Trigger/Open The Modal -->
+<button id="myBtn">Upload</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Description:</p>
+    <input type="text" placeholder="Enter Description" name="description" required>
+    <p>File:</p>
+    <input type="file" name="fileUpload" required>
+    <button type="submit">Submit</button>
+  </div>
+
+</div>
+
+    </footer>
+    <script src="jvs.js"></script>
+</body>
+</html>

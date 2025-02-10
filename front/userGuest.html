@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing Platform</title>
+    <link rel="stylesheet" href="style2.css">
+    <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+</head>
+
+<body>
+    <header>
+        <img src="./Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <form id="searchForm" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input" id="searchQuery">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        <script>
+            document.getElementById('searchForm').onsubmit = function (event) {
+                event.preventDefault();
+                const query = document.getElementById('searchQuery').value;
+                localStorage.setItem('lastSearchQuery', query);
+                window.location.href = `/userGuest/searchResults`;
+            }
+        </script>
+        <a href="/userGuest" class="user-icon-link" aria-label="User profile">
+            <img src="./Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+
+    <aside class="sidebar-left" id="sidebar">
+        <button id="help-btn" class="additional-info-btn">Help</button>
+        <a href="AboutUs">
+            <button class="additional-info-btn">About us</button>
+        </a>
+        <a href="/">
+            <button class="additional-info-btn">Out</button>
+        </a>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Your uploads:</h1>
+            <div id="uploads-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn">Upload</button>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="uploadForm">
+                    <p>Description:</p>
+                    <input type="text" id="description" placeholder="Enter Description" name="description" required>
+                    <p>Number:</p>
+                    <input type="number" id="numberField" placeholder="Enter a number between 1 and 30" name="numberField" required>
+                    <p>File:</p>
+                    <input type="file" id="fileUpload" name="fileUpload" required>
+                    <div class="h-captcha" data-sitekey="d2a2e275-f49f-4104-a0a1-5cebbec87abe" data-callback="onCaptchaSuccess"></div>
+                    <p id="error-message" style="color: red; display: none;">Number must be between 1 and 30.</p>
+                    <button type="submit" disabled="disabled">Submit</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById("myModal");
+            const btn = document.getElementById("myBtn");
+            const span = document.getElementsByClassName("close")[0];
+            const uploadForm = document.getElementById("uploadForm");
+            const submitButton = uploadForm.querySelector('button[type="submit"]');
+            const errorMessage = document.getElementById("error-message");
+
+            const helpButton = document.getElementById('help-btn');
+            helpButton.addEventListener('click', () => {
+                window.location.href = '../PIt_Documentatie_Sarghi_Vatamanelu.html'; 
+            });
+
+            btn.onclick = function () {
+                modal.style.display = "block";
+            };
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            };
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+
+            window.onCaptchaSuccess = function (token) {
+                submitButton.disabled = false;
+            };
+
+            uploadForm.onsubmit = async function (event) {
+                event.preventDefault();
+
+                const numberFieldValue = parseInt(document.getElementById('numberField').value, 10);
+
+                if (numberFieldValue < 1 || numberFieldValue > 30) {
+                    errorMessage.style.display = "block";
+                    return;
+                } else {
+                    errorMessage.style.display = "none";
+                }
+
+                const formData = new FormData(uploadForm);
+
+                const response = await fetch('/userGuest', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    const uploadId = result.postId;
+                    const description = document.getElementById('description').value;
+                    saveUpload(uploadId, description);
+                    addButton(uploadId, description);
+                    modal.style.display = "none";
+                    location.reload();
+                } else {
+                    alert(result.message);
+                }
+            };
+
+            function saveUpload(id, description) {
+                let uploads = JSON.parse(localStorage.getItem('uploads')) || [];
+                uploads.push({ id, description });
+                localStorage.setItem('uploads', JSON.stringify(uploads));
+            }
+
+            function addButton(id, description) {
+                const uploadsContainer = document.getElementById('uploads-container');
+                const button = document.createElement('button');
+                button.className = 'description-label';
+                button.textContent = description;
+                button.onclick = function () {
+                    localStorage.setItem('selectedUploadId', id);
+                    window.location.href = `/userGuest/visitPost`;
+                };
+                uploadsContainer.appendChild(button);
+            }
+
+            function fetchInitialData() {
+                const uploads = JSON.parse(localStorage.getItem('uploads')) || [];
+                uploads.forEach(({ id, description }) => {
+                    addButton(id, description);
+                });
+            }
+
+            fetchInitialData();
+        });
+    </script>
+</body>
+
+</html>

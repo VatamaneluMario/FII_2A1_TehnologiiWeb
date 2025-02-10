@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account Page</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body, html {
+            overflow: hidden; /* Disable both horizontal and vertical scrolling */
+            height: 100%; /* Ensure the body and html take the full viewport height */
+            margin: 0; /* Remove any default margin to avoid unexpected scroll bars */
+        }
+        .container {
+            height: 100%; /* Ensure the container takes the full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .account-form {
+            display: flex;
+            flex-direction: column;
+            /* gap: 1px; */
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            /* gap: 1px; */
+        }
+        .action-options {
+            display: flex;
+            flex-direction: column;
+            /* gap: 10px; */
+            text-align: center;
+        }
+        .submit-btn {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        a {
+            color: #0066CC;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">Create account</div>
+        <form class="account-form" id="register-form">
+            <div class="input-container">
+                <input type="text" id="username" name="username" placeholder="Username" class="input-field" required>
+            </div>
+            <div class="input-container password">
+                <input type="password" id="password" name="password" placeholder="Password" class="input-field" required>
+            </div>
+            <div class="input-container email">
+                <input type="email" id="email" name="email" placeholder="Email" class="input-field" required>
+            </div>
+            <div class="input-container admin">
+                <label for="admin">
+                    <input type="checkbox" id="admin" name="admin" class="input-checkbox">
+                    Admin
+                </label>
+            </div>
+            <div class="action-options">
+                <input type="submit" value="Create Account" class="submit-btn">
+                <div class="login-option">have an account? <a href="/">login!</a></div>
+                <div class="guest-option">don’t have an account? <a href="/userGuest">as guest</a></div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('register-form');
+        registerForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const email = document.getElementById('email').value;
+            const admin = document.getElementById('admin').checked;
+            
+            const response = await fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password, email, admin })
+            });
+            
+            const data = await response.json();
+            if (response.ok) {
+                alert('Account created successfully');
+                window.location.href = '/';
+            } else {
+                alert(data.message);
+            }
+        });
+    </script>
+</body>
+</html>

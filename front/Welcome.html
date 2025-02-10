@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="title">Welcome</div>
+        <form class="account-form" id="login-form">
+            <div class="input-container">
+                <input type="text" id="username" name="username" placeholder="Username" class="input-field" required>
+            </div>
+            <div class="input-container password">
+                <input type="password" id="password" name="password" placeholder="Password" class="input-field" required>
+            </div>
+            <div class="action-options">
+                <input type="submit" value="login" class="submit-btn">
+                <div class="login-option">You don't have an account? <a href="/register">Create one!</a></div>
+                <div class="guest-option">Don’t have an account? <a href="/userGuest">Continue as guest</a></div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        window.onpageshow = function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                localStorage.clear();
+            }
+        };
+
+        const loginForm = document.getElementById('login-form');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const response = await fetch('http://localhost:5000/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
+                console.log(data.role);
+                const redirectUrl = data.role === 'admin' ? '/admin' : '/user';
+                window.location.href = redirectUrl;
+            } else {
+                alert(data.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing Platform</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+    <header>
+        <img src="./Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <form id="searchForm" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input" id="searchQuery">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <script>
+            document.getElementById('searchForm').onsubmit = function (event) {
+                event.preventDefault();
+                const query = document.getElementById('searchQuery').value;
+                localStorage.setItem('lastSearchQuery', query);
+                window.location.href = `/user/searchResults`;
+            }
+        </script>
+        <a href="/user/userPage" class="user-icon-link" aria-label="User profile">
+            <img src="./Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+
+    <aside class="sidebar-left" id="sidebar">
+        <a href="/user">
+            <button class="home-btn">Profile</button>
+        </a>
+        <button id="helpBtn" class="additional-info-btn">Help</button>
+        <a href="AboutUs">
+            <button class="additional-info-btn">About us</button>
+        </a>
+        <button id="logoutBtn" class="additional-info-btn">Logout</button>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Your uploads:</h1>
+            <div id="uploads-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn">Upload</button>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="uploadForm">
+                    <p>Description:</p>
+                    <input type="text" id="description" placeholder="Enter Description" name="description" required>
+                    <p>Number:</p>
+                    <input type="number" id="numberField" placeholder="Enter a number" name="numberField" required>
+                    <p>File:</p>
+                    <input type="file" id="fileUpload" name="fileUpload" required>
+                    <p id="error-message" style="color: red; display: none;">Number must be greater than 0.</p>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+        const resultsContainer = document.getElementById('results-container');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById("myModal");
+            const btn = document.getElementById("myBtn");
+            const span = document.getElementsByClassName("close")[0];
+            const uploadForm = document.getElementById("uploadForm");
+            const errorMessage = document.getElementById("error-message");
+            const helpBtn = document.getElementById("helpBtn");
+
+            helpBtn.onclick = function () {
+                window.location.href = '../PIt_Documentatie_Sarghi_Vatamanelu.html';
+            };
+
+            btn.onclick = function () {
+                modal.style.display = "block";
+            }
+
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+
+            uploadForm.onsubmit = async function (event) {
+                event.preventDefault();
+
+                const numberFieldValue = document.getElementById('numberField').value;
+
+                if (numberFieldValue <= 0) {
+                    errorMessage.style.display = "block";
+                    return;
+                } else {
+                    errorMessage.style.display = "none";
+                }
+
+                const formData = new FormData();
+                formData.append('description', document.getElementById('description').value);
+                formData.append('number', numberFieldValue);
+                formData.append('fileUpload', document.getElementById('fileUpload').files[0]);
+
+                const token = localStorage.getItem('token');
+
+                const response = await fetch('/user', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                if (response.ok) {
+                    localStorage.setItem('lastUploadId', result.postId);
+                    modal.style.display = "none";
+                    addNewUploadToDOM(result.postId, result.description, new Date().toISOString().split('T')[0]);
+                    fetchUserData();
+                }
+            }
+
+            async function fetchUserData() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch('/user/data', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const userData = await response.json();
+                        const uploadsContainer = document.getElementById('uploads-container');
+                        uploadsContainer.innerHTML = '';
+                        userData.forEach(upload => {
+                            const uploadDiv = document.createElement('div');
+                            uploadDiv.classList.add('upload-info');
+                            uploadDiv.innerHTML = `
+                                <button class="description-label" data-id="${upload.id}">${upload.description}</button>
+                                <span class="upload-data-label">${upload.date}</span>
+                                <button class="delete-label" data-id="${upload.id}">delete</button>
+                            `;
+                            uploadsContainer.appendChild(uploadDiv);
+                        });
+
+                        document.querySelectorAll('.description-label').forEach(button => {
+                            button.addEventListener('click', function () {
+                                const id = this.getAttribute('data-id');
+                                localStorage.setItem('selectedUploadId', id);
+                                window.location.href = '/user/upload';
+                            });
+                        });
+
+                        document.querySelectorAll('.delete-label').forEach(button => {
+                            button.addEventListener('click', async function () {
+                                const id = this.getAttribute('data-id');
+                                const token = localStorage.getItem('token');
+
+                                const response = await fetch(`/user`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ id })
+                                });
+
+                                if (response.ok) {
+                                    alert('Post deleted successfully');
+                                    this.parentElement.remove();
+                                } else {
+                                    alert('Error deleting post');
+                                }
+                            });
+                        });
+                    } else {
+                        document.getElementById('uploads-container').innerHTML = '<p>Error fetching user data</p>';
+                    }
+                } catch (error) {
+                    document.getElementById('uploads-container').innerHTML = '<p>Error fetching user data</p>';
+                }
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                alert('You have been logged out.');
+                window.location.href = '/';
+            });
+
+            function addNewUploadToDOM(id, description, date) {
+                const uploadsContainer = document.getElementById('uploads-container');
+                const uploadDiv = document.createElement('div');
+                uploadDiv.classList.add('upload-info');
+                uploadDiv.innerHTML = `
+                    <button class="description-label" data-id="${id}">${description}</button>
+                    <span class="upload-data-label">${date}</span>
+                    <button class="delete-label" data-id="${id}">delete</button>
+                `;
+                uploadsContainer.appendChild(uploadDiv);
+
+                uploadDiv.querySelector('.description-label').addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    localStorage.setItem('selectedUploadId', id);
+                    window.location.href = '/user/upload';
+                });
+
+                uploadDiv.querySelector('.delete-label').addEventListener('click', async function () {
+                    const id = this.getAttribute('data-id');
+                    const token = localStorage.getItem('token');
+
+                    const response = await fetch(`/user`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id })
+                    });
+
+                    if (response.ok) {
+                        alert('Post deleted successfully');
+                        this.parentElement.remove();
+                    } else {
+                        alert('Error deleting post');
+                    }
+                });
+            }
+
+            fetchUserData();
+        });
+    </script>
+</body>
+
+</html>

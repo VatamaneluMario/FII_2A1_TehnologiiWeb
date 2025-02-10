@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="../style2.css">
+</head>
+<body>
+    <header>
+        <img src="../Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <form id="searchForm" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input" id="searchQuery">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        
+        <script>
+            document.getElementById('searchForm').onsubmit = function(event) {
+                event.preventDefault();
+                const query = document.getElementById('searchQuery').value;
+                window.location.href = `user/searchResults`;
+            }
+        </script>
+        <a href="#" id="userProfileLink" class="user-icon-link" aria-label="User profile">
+            <img src="../Poze/iconFundalMegru.png" alt="User Icon" class="user-icon">
+        </a>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+
+    <aside class="sidebar-left" id="sidebar">
+        <a href="/user">
+            <button class="home-btn">Profile</button>
+        </a>
+        <a href="/PIt_Documentatie_Sarghi_Vatamanelu.html">
+            <button class="additional-info-btn">Help</button>
+        </a>
+        
+        <a href="/AboutUs">
+            <button class="additional-info-btn">About us</button>
+        </a>
+        <button id="logoutBtn" class="additional-info-btn">Logout</button>
+    </aside>
+
+    <main>
+        <section class="profile-section">
+            <img src="../Poze/iconFundalMegru.png" alt="Profile Picture" class="profile-picture">
+            <h1 id="username">Loading...</h1>
+            <p id="postCount"></p>
+            <p id="contributionCount"></p>
+            <button id="changePasswordBtn" class="change-password-btn">Change Password</button>
+        </section>
+        <div class="extra-rocket">
+            <img src="../Poze/Untitleddesign-ezgif.com-video-to-gif-converter.gif" alt="Rocket Icon" class="rocket-icon">
+        </div>
+    </main>
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="changePasswordForm">
+                <p>Current Password:</p>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+                <p>New Password:</p>
+                <input type="password" id="newPassword" name="newPassword" required>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            async function fetchUserData() {
+                try {
+                    const token = localStorage.getItem('token');
+                    if (!token) {
+                        throw new Error("No token found");
+                    }
+
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const username = payload.username;
+
+                    console.log('Fetching data for username:', username);
+
+                    const response = await fetch(`/user/stats?username=${username}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    console.log('Fetch response:', response);
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        document.getElementById('username').textContent = userData.username;
+                        document.getElementById('postCount').textContent = `Number of posts: ${userData.postCount}`;
+                        document.getElementById('contributionCount').textContent = `Number of contributions: ${userData.contributionCount}`;
+                    } else {
+                        throw new Error('Failed to fetch user data');
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    document.getElementById('username').textContent = 'Error fetching user data';
+                    document.getElementById('postCount').textContent = '';
+                    document.getElementById('contributionCount').textContent = '';
+                }
+            }
+
+            const changePasswordModal = document.getElementById("changePasswordModal");
+            const changePasswordBtn = document.getElementById("changePasswordBtn");
+            const closeChangePasswordModal = document.getElementsByClassName("close")[0];
+
+            changePasswordBtn.onclick = function() {
+                changePasswordModal.style.display = "block";
+            }
+
+            closeChangePasswordModal.onclick = function() {
+                changePasswordModal.style.display = "none";
+            }
+
+            window.onclick = function(event) {
+                if (event.target == changePasswordModal) {
+                    changePasswordModal.style.display = "none";
+                }
+            }
+
+            document.getElementById('changePasswordForm').onsubmit = async function(event) {
+                event.preventDefault();
+
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+
+                const token = localStorage.getItem('token');
+
+                const response = await fetch('/changePassword', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentPassword: currentPassword,
+                        newPassword: newPassword
+                    })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+                if (response.ok) {
+                    changePasswordModal.style.display = "none";
+                }
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                alert('You have been logged out.');
+                window.location.href = '/';
+            });
+
+            fetchUserData();
+        });
+    </script>
+</body>
+</html>

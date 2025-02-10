@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <header>
+        <img src="../Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <a href="/admin" class="user-icon-link" aria-label="User profile">
+            <img src="../Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+
+    <aside class="sidebar-left" id="sidebar">
+        <button id="postsBtn" class="additional-info-btn">Posts</button>
+        <button id="usersBtn" class="additional-info-btn">Users</button>
+        <button id="logoutBtn" class="additional-info-btn">Logout</button>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Search Results:</h1>
+            <div id="results-container" class="results-container"></div>
+        </section>
+    </main>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+        const resultsContainer = document.getElementById('results-container');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        async function fetchResults(endpoint) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/${endpoint}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    }
+                });
+
+                if (response.ok) {
+                    const results = await response.json();
+                    displayResults(results, endpoint);
+                } else {
+                    resultsContainer.innerHTML = '<p>Error fetching data</p>';
+                }
+            } catch (error) {
+                resultsContainer.innerHTML = '<p>Error fetching data</p>';
+            }
+        }
+
+        async function deletePost(id, element) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/api/posts`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    },
+                    body: JSON.stringify({ id })
+                });
+
+                if (response.ok) {
+                    element.remove();
+                } else {
+                    throw new Error('Error deleting post');
+                }
+            } catch (error) {
+                console.error('Error deleting post:', error);
+            }
+        }
+
+        async function deleteUser(username, element) {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch(`/user/data?visitName=${username}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': token ? `Bearer ${token}` : ''
+                    }
+                });
+
+                if (response.ok) {
+                    const posts = await response.json();
+                    for (const post of posts) {
+                        await deletePost(post.id);
+                    }
+
+                    const deleteUserResponse = await fetch(`/api/users`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token ? `Bearer ${token}` : ''
+                        },
+                        body: JSON.stringify({ username })
+                    });
+
+                    if (deleteUserResponse.ok) {
+                        element.remove();
+                        alert('User and their posts deleted successfully.');
+                    } else {
+                        alert('Error deleting user.');
+                    }
+                } else {
+                    alert('Error fetching user posts.');
+                }
+            } catch (error) {
+                alert('Error deleting user.');
+                console.error('Error deleting user:', error);
+            }
+        }
+
+        function displayResults(results, type) {
+            resultsContainer.innerHTML = '';
+            results.forEach(result => {
+                const resultDiv = document.createElement('div');
+                resultDiv.classList.add('result-item');
+
+                const resultText = document.createElement('div');
+                resultText.classList.add('result-info-text');
+                resultText.textContent = type === 'posts' ? result.description : result.username;
+                
+                resultText.addEventListener('click', () => {
+                    if (type === 'posts') {
+                        localStorage.setItem('selectedUploadId', result.id);
+                        window.location.href = '/userAdmin/visitPost';
+                    }
+                });
+                resultText.classList.add('clickable');
+
+                const deleteButton = document.createElement('button');
+                deleteButton.classList.add('delete-btn');
+                deleteButton.textContent = 'delete';
+
+                if (type === 'posts') {
+                    deleteButton.addEventListener('click', () => deletePost(result.id, resultDiv));
+                } else if (type === 'users') {
+                    deleteButton.addEventListener('click', () => deleteUser(result.username, resultDiv));
+                }
+
+                resultDiv.appendChild(resultText);
+                resultDiv.appendChild(deleteButton);
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+        document.getElementById('postsBtn').addEventListener('click', () => {
+            fetchResults('posts');
+        });
+
+        document.getElementById('usersBtn').addEventListener('click', () => {
+            fetchResults('users');
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            alert('You have been logged out.');
+            window.location.href = '/';
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchResults('posts');
+        });
+    </script>
+</body>
+</html>

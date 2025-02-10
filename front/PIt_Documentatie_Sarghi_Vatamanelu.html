@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="subject" content="Paste It Project">
+    <meta name="description" content="PIt where you can paste or get your code">
+    <meta name="author" content="Sarghi Vladut-Gabriel Vatamanelu Mario-Narcis">
+    <title>Documentatie PIt</title>
+</head>
+
+<body prefix="schema: http://schema.org" itemscope="" itemtype="http://schema.org/WebPage">
+    <h1 itemprop="name">Paste It Project Documentation</h1>
+    <ol>
+        <li>
+            <a href="#authors"> Autori</a>
+        </li>
+        <li>
+            <a href="#introduction"> Introducere</a>
+            <ol>
+                <li><a href="#scope"> Scopul documentului</a></li>
+                <li><a href="#conventions"> Conventiile documentului</a></li>
+                <li><a href="#userTarget"> Audienta Tinta</a></li>
+                <li><a href="#productScope"> Scopul produsului</a></li>
+                <li><a href="#references">Referinte</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#generalDescription">Descrierea generala</a>
+            <ol>
+                <li><a href="#productPerspective">Descrierea produsului</a></li>
+                <li><a href="#productFunctions"> Functionalitatile produsului</a></li>
+                <li><a href="#usersCategorii">Categorii de utilizatori</a></li>
+                <li><a href="#operationEnvironment"> Mediu de operare</a></li>
+                <li><a href="#designConstrains">Design si constrangeri de implementare</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#externalRequirements">Cerinte externe</a>
+            <ol>
+                <li><a href="#softwareInterface">Interfață software</a></li>
+                <li><a href="#communicationInterface">Interfață de comunicare</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#functionalRequirements">Cerințe funcționale</a>
+            <ol>
+                <li><a href="#register">Home page(Guest)</a></li>
+                <li><a href="#login">Home Page(logged-in user)</a></li>
+                <li><a href="#uploadrecipe">SignUp page</a></li>
+                <li><a href="#searchrecipe">Login page</a></li>
+                <li><a href="#profilePage">Profile page</a></li>
+                <li><a href="#uploadPage">Upload page</a></li>
+                <li><a href="#visitPost">Visit post</a></li>
+                <li><a href="#visitUser">Visit user</a></li>
+                <li><a href="#adminPage">Admin page</a></li>
+                <li><a href="#aboutUs">About Us page</a></li>                
+
+            </ol>
+        </li>
+        <li>
+            <a href="#nonfunctionalRequirements">Cerințe nonfuncționale</a>
+            <ol>
+                <li><a href="#safety">Cerințe de siguranță</a></li>
+                <li><a href="#security">Cerințe de securitate</a></li>
+                <li><a href="#qualities">Calități software</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#c4Diagram">C4 Diagram</a>
+        </li>
+    </ol>
+    
+
+    <article id="article" typeof="schema:ScholarlyArticle" resource="#">
+        <section id="authors" typeof="sa:AuthorsList">
+            <h2><span>1. </span>Autori</h2>
+            <ol>
+                <li property="schema:author" typeof="sa:ContributorRole">
+                    <a property="schema:author" href="#" typeof="schema:Person">
+                        <span property="schema:givenName">Vladut-Gabriel</span>
+                        <span property="schema:familyName">Sarghi</span>
+                    </a>
+                    <sup property="sa:roleContactPoint" typeof="schema:ContactPoint">
+                        <a property="schema:email" href="sarghivladut17@gmail.com" title="corresponding author">&#9993;</a>
+                    </sup>
+                </li>
+
+                <li property="schema:author" typeof="sa:ContributorRole">
+                    <a property="schema:author" href="#" typeof="schema:Person">
+                        <span property="schema:givenName">Mario-Narcis</span>
+                        <span property="schema:familyName">Vatamanelu</span>
+                    </a>
+                    <sup property="sa:roleContactPoint" typeof="schema:ContactPoint">
+                        <a property="schema:email" href="vatamanelu.narcis@gmail.com" title="corresponding author">&#9993;</a>
+                    </sup>
+                </li>
+            </ol>
+        </section>
+
+        <section typeof="sa:ScholarlyArticle" role="doc-introduction">
+            <h2 id="introduction"> <span>2. </span>Introducere</h2>
+            <p></p>
+
+            <h3 id="scope"><span>2.1 </span> Scopul documentului</h3>
+            <p>
+                Scopul acestui document este să prezinte o descriere detaliată a aplicației Web Paste It,
+                bazată pe proiectul propus PIt (Paste It). Acesta va explica scopul și funcționalitățile si interfața aplicației.
+                Documentul este destinat potențialilor utilizatori ai aplicației, inclusiv dezvoltatorilor,
+                pentru a oferi o înțelegere completă a modului în care aplicația funcționează și a scopurilor sale principale.
+            </p>
+
+            <h3 id="conventions"><span>2.2 </span>Conventiile documentului</h3>
+            <p>
+                Acest document a fost creat pe baza modelului IEEE System Requirement Specification Documents,
+                asigurându-se că toate cerințele sunt clar definite și organizate într-un mod logic și accesibil.
+                Documentul utilizează terminologia standard în domeniul dezvoltării de software și urmărește o structură clară
+                pentru a facilita înțelegerea și navigarea.
+            </p>
+
+
+            <h3 id="userTarget"><span>2.3 </span> Audienta tinta</h3>
+            <p>
+                Audiența țintă pentru acest document include persoane obișnuite care doresc să distribuie cod online în diferite
+                limbaje de programare, într-un mediu creat special în acest sens. Aceasta include, dar nu se limitează la, elevi,
+                studenți, programatori, cursanți sau persoane interesate de programare. De asemenea, documentul este relevant
+                pentru dezvoltatori și orice alte părți interesate de utilizarea sau îmbunătățirea aplicației Paste It.
+            </p>
+            <h3 id="productScope"><span>2.4 </span> Scopul Produsului</h3>
+            <p>
+                Paste It a fost dezvoltat cu scopul de a ajuta și încuraja oamenii să învețe programare și să distribuie cod cu alți utilizatori
+                într-un mediu eficient și organizat. Aplicația permite utilizatorilor autentificați să gestioneze propriile postări, inclusiv editarea
+                și ștergerea acestora, precum și atașarea de diverse atribute. De asemenea, utilizatorii autentificați pot selecta alți utilizatori
+                care au voie să modifice postarea (contribuitori) și pot menține un istoric pentru a face rollback la versiuni anterioare. Pentru
+                utilizatorii neautentificați, postările pot fi făcute publice doar după rezolvarea corectă a unei probleme de tip captcha și sunt
+                menținute maxim 30 de zile. Codurile trebuie să fie colorate conform unui dicționar (syntax highlighting), iar limbajul va fi
+                selectat de cel care a făcut postarea. Paste It este conceput pentru a facilita colaborarea asupra codului sursă într-un mod
+                flexibil și personalizabil, oferind un mediu propice învățării și dezvoltării programării.
+            </p>
+            <h3 id="references"><span>2.5 </span> Referinte</h3>
+            <ol>
+                <li><a href="https://www.w3schools.com/css/">https://www.w3schools.com/css/<a></li>
+                <li><a href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css">https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css<a></li>
+                <li><a href="https://nodejs.org/en/learn/getting-started/introduction-to-nodejs">https://nodejs.org/en/learn/getting-started/introduction-to-nodejs<a></li>
+                <li><a href="https://app.diagrams.net/">https://app.diagrams.net/<a></li>
+                <li><a href="https://nodejs.org/en/learn/getting-started/introduction-to-nodejs">https://nodejs.org/en/learn/getting-started/introduction-to-nodejs<a></li>
+                <li><a href="https://github.com/rick4470/IEEE-SRS-Tempate">IEEE Template for System Requirements Specification Documents<a></li>
+            </ol>
+        </section>
+
+        <section typeof="sa:MaterialsAndMethods" role="doc-chapter">
+            <h2 id="generalDescription"> <span>3. </span>Descriere generală</h2>
+
+            <h3 id="productPerspective"> <span>3.1 </span>Descrierea produsului</h3>
+            <p>
+                Paste It este o aplicație Web care facilitează managementul postărilor ce conțin cod sursă pentru diferite limbaje de
+                programare. Aplicația este destinată dezvoltatorilor și pasionaților de programare care doresc să împărtășească
+                și să colaboreze asupra codului sursă. Paste It oferă un mediu organizat și eficient pentru distribuirea și
+                colaborarea asupra codului, cu funcționalități avansate pentru utilizatorii autentificați și posibilități
+                eficiente pentru utilizatorii anonimi, vizitatori.
+            </p>
+
+            <h3 id="productFunctions"> <span>3.2 </span>Funcționalitățile produsului</h3>
+            <p>
+                Aplicația Paste It oferă următoarele funcționalități esențiale pentru utilizatori:
+            </p>
+            <ul>
+                <li>
+                    <strong>Căutare și Navigare:</strong> Utilizatorii pot căuta postări după nume utilizând un search bar intuitiv.
+                     De asemenea, există posibilitatea de a căuta alți utilizatori în aplicație prin intermediul aceluiasi search bar si accesarea sectiunii de users.
+                </li>
+                <li>
+                    <strong>Distribuire Cod:</strong> Vizitatorii website-ului pot căuta postări/utilizatori sau pot distribui cod sursă fără a avea un cont creat sau fără a se înregistra/loga.
+                </li>
+                <li>
+                    <strong>Funcționalități pentru Utilizatori Logați:</strong>
+                    <ul>
+                        <li><strong>Managementul Postărilor:</strong> Utilizatorii logați pot edita, șterge sau adauga contribuitori pentru propriile postari. Ei mențin un istoric al versiunilor pentru a face rollback la versiuni anterioare ale codului.</li>
+                        <li><strong>Colaborare:</strong> Utilizatorii pot selecta alți utilizatori cu drepturi de modificare asupra postărilor lor, facilitând colaborarea asupra codului sursă.</li>
+                        <li><strong>Limitarea Duratei de Păstrare:</strong> Utilizatorii pot limita durata de păstrare a postărilor, asigurându-se că acestea sunt șterse automat după o anumită perioadă de timp.</li>
+                        <li><strong>Managementul Contului:</strong> Utilizatorii logați isi pot schimba parola, prin introducerea parolei actuale si a celei noi. De asemenea, ei isi pot vedea numarul de postari si de contributii inregistrate cu acel cont.</li>
+                    </ul>
+                </li>
+                <li>
+                    <strong>Syntax Highlighting:</strong> Codurile sunt colorate conform unui dicționar specific limbajului de programare, care este selectat de cel care face postarea, pentru a facilita citirea și înțelegerea codului, având opțiuni precum C, C++, JavaScript, Python sau Java.
+                </li>
+            </ul>
+            <p>
+                Prin aceste funcționalități, Paste It oferă un mediu robust și flexibil pentru partajare și colaborare asupra codului sursă, atât pentru utilizatorii autentificați cât și pentru cei anonimi, răspunzând cererilor variate ale comunității de programatori.
+            </p>
+            <h4>Home Page (guest)</h4>
+            <p>Pagina principală pentru utilizatorii neînregistrați, unde pot naviga și vizualiza postările existente.</p>
+            <ul>
+                <li><strong>My account:</strong> utilizatorul este redirecționat către pagina de login (unde există și opțiunea de înregistrare)</li>
+                <li><strong>Search section:</strong> utilizatorul poate căuta o postare sau un user cu ajutorul unui search bar.</li>
+                <li><strong>Your uploads:</strong> utilizatorul poate selecta o postare pentru a o accesa și vedea.</li>
+                <li><strong>Upload:</strong> utilizatorul poate face o postare și va fi direcționat spre a completa titlul noii postări și a da upload din computer documentului de cod, după rezolvarea unei verificări tip captcha. Postare ce va fi valabilă pe aplicație 30 de zile.</li>
+            </ul>
+
+            <h4>Home Page (logged-in user)</h4>
+            <p>Pagina principală pentru utilizatorii autentificați, oferind funcționalități suplimentare pentru gestionarea contului și postărilor.</p>
+            <ul>
+                <li><strong>My Account:</strong> utilizatorul este redirecționat către pagina unde își poate vedea sau edita datele contului.</li>
+                <li><strong>Search section:</strong> utilizatorul poate căuta o postare sau un user cu ajutorul unui search bar.</li>
+                <li><strong>Your uploads:</strong> utilizatorul poate selecta o postare pentru a o vedea, modifica sau o poate elimina folosind butonul delete din dreptul postării</li>
+                <li><strong>Upload:</strong> utilizatorul poate face o postare și va fi direcționat spre a completa titlul noii postări și a da upload din computer documentului de cod, după rezolvarea unei verificări tip captcha.</li>
+            </ul>
+
+            <h4>SignUp page</h4>
+            <p>Pagina unde utilizatorii noi își pot crea un cont pentru a accesa funcționalitățile complete ale aplicației.</p>
+            <ul>
+                <li><strong>Create account form:</strong> utilizatorul creează un cont nou folosind date valide, iar apoi este redirecționat către welcome page pentru a se loga în contul creat</li>
+                <li><strong>Login:</strong> utilizatorul va fi redirecționat către pagina de logare</li>
+                <li><strong>Don't have account:</strong> utilizatorul este redirecționat către home page (guest)</li>
+            </ul>
+
+            <h4>Welcome page</h4>
+            <p>Pagina de întâmpinare unde utilizatorii existenți se pot loga sau unde noii utilizatori sunt invitați să-și creeze un cont.</p>
+            <ul>
+                <li><strong>Login form:</strong> utilizatorul se conectează la un cont deja existent folosind date valide, iar apoi este redirecționat către home page (logged-in user)</li>
+                <li><strong>Create one:</strong> utilizatorul este redirecționat către pagina de SignUp</li>
+                <li><strong>Don't have account:</strong> utilizatorul este redirecționat către home page (guest)</li>
+            </ul>
+
+            <h4>Profile page</h4>
+            <p>Pagina de profil unde utilizatorii își pot gestiona informațiile personale și setările contului.</p>
+            <ul>
+                <li><strong>Change password:</strong> utilizatorul își poate alege o nouă parolă pentru contul personal</li>
+                <li><strong>Help:</strong> utilizatorul va fi redirecționat documentația oficială a site-ului</li>
+                <li><strong>Sign out:</strong> utilizatorul se va deconecta de la cont și va fi redirecționat către Welcome page</li>
+            </ul>
+
+            <h4>Upload page</h4>
+            <p>Pagina unde utilizatorii pot gestiona postările lor de cod sursă.</p>
+            <ul>
+                <li><strong>Edit :</strong> utilizatorul va putea modifica continutul postarii.</li>
+                <li><strong>Save option:</strong> utilizatorul va salva modificările făcute postării până în acel moment si va alege un nume sugestiv pentru salvarea versiunii modificate.</li>
+                <li><strong>Add contributors:</strong> utilizatorul va putea adăuga un contribuitor ce va avea drept de editare pentru acea postare. Se va adăuga prin completarea unui pop-up pentru username-ul contului.</li>
+                <li><strong>See contributors:</strong> utilizatorului i se va deschide un pop-up cu username-ul conturilor ce sunt contribuitori pentru acea postare.</li>
+                <li><strong>Rollback:</strong> utilizatorul va putea reveni la o versiune anterioară a paginii de cod.</li>
+                <li><strong>Change Language:</strong> utilizatorul poate schimba limbajul de cod pentru acea postare. Printre variante sunt C, C++, JavaScript, Python sau Java.</li>
+            </ul>
+
+            <h4>Visit post</h4>
+            <p>Pagina unde utilizatorii pot vizualiza o postare specifică și gestionarea contribuțiilor și a versiunilor.</p>
+            <ul>
+                <li><strong>See contributors:</strong> utilizatorului i se va deschide un pop-up cu username-ul conturilor ce sunt contribuitori pentru acea postare.</li>
+                <li><strong>Rollback:</strong> utilizatorul va putea reveni la o versiune anterioară a paginii de cod.</li>
+            </ul>
+
+            <h4>Visit user</h4>
+            <p>Pagina unde utilizatorii pot vizualiza profilul altor utilizatori și postările acestora.</p>
+            <ul>
+                <li><strong>User uploads:</strong> utilizatorul va vedea postările acelui utilizator și le va putea accesa.</li>
+            </ul>
+
+            <h4>Admin page</h4>
+            <p>Pagina "Admin" permite administratorilor să gestioneze postările și utilizatorii din aplicația Paste It.</p>
+            <ul>
+                <li><strong>Ștergere Postări:</strong> Administratorii pot șterge postările utilizatorilor care încalcă regulile comunității sau conțin conținut inadecvat.</li>
+                <li><strong>Ștergere Utilizatori:</strong> Administratorii pot șterge conturile de utilizator care încalcă termenii și condițiile de utilizare ale aplicației.</li>
+            </ul>
+
+            <h4>About us page</h4>
+            <p>Pagina "About Us" oferă informații despre echipa din spatele aplicației Paste It. Aceasta include imagini cu membrii echipei, scurte descrieri ale fiecărui membru și adresele de contact
+                (e-mail) ale acestora. Scopul acestei pagini este de a oferi utilizatorilor o mai bună înțelegere a celor care au contribuit la dezvoltarea aplicației și de a facilita comunicarea între
+                utilizatori și dezvoltatori.</p>            
+
+
+            <h3 id="classesAndCharacteristics"> <span>3.3 </span>Categorii de utilizatori</h3>
+            <p>
+            <ul>
+                <li><strong>Guest:</strong> simplu vizitator al site-ului ce nu poate accesa toate facilitățile site-ului. Acesta poate vedea postări existente pe platformă și crea postări valabile maxim 30 de zile.</li>
+                <li><strong>User:</strong> utilizator cu un cont creat și stocat în baza de date ce poate accesa toate facilitățile site-ului.</li>
+                <li><strong>Admin:</strong> Admin ce poate sterge o postare sau un user alaturi de toate postarile lui. Acest cont se poate crea folosind o parola secreta detinuta doar de dezvoltatorii aplicatiei</li>
+            </ul>
+            </p>
+
+            <h3 id="operationEnvironment"> <span>3.4</span> Mediu de operare </h3>
+            <p>
+                Fiind o aplicație Web, Paste It poate fi utilizată în orice browser ce rulează HTML, CSS, fără a ține cont de o versiune
+                anume a sistemului de operare al device-ului pe care rulează aplicația. Acest lucru face ca aplicația să fie accesibilă pe
+                o gamă largă de dispozitive, inclusiv desktop-uri, laptop-uri, tablete și telefoane mobile, indiferent dacă acestea folosesc
+                Windows, macOS, Linux sau alte sisteme de operare.
+            </p>
+
+            <h3 id="designConstrains"> <span>3.5</span> Design și constrângeri de implementare </h3>
+            <p>
+                Aplicația Paste It a fost dezvoltată utilizând Node.js pentru partea de backend, asigurând astfel o scalabilitate și
+                performanță optimă în gestionarea cererilor utilizatorilor. Frontend-ul aplicației a fost creat folosind HTML și CSS pentru
+                a oferi o interfață de utilizator atractivă, intuitivă și responsive. Design-ul ține cont de
+                compatibilitatea cu majoritatea browserelor moderne și de asigurarea unei experiențe fluide pentru utilizatori.
+            </p>
+        </section>
+
+        <section typeof="sa:MaterialsAndMethods" role="doc-chapter">
+            <h2 id="externalRequirements"><span>4. </span> Cerinte externe</h2>
+
+            <h3 id="softwareInterface"><span>4.1 </span>Interfață software</h3>
+            <p>
+                Paste It dispune de conectare la o bază de date relațională: MySQL, pentru a stoca datele utilizatorilor cât și ale postărilor si versiunilor lor.
+                Această bază de date va gestiona informațiile de autentificare, postările de cod și detaliile contribuțiilor utilizatorilor.
+                Cerințele minime software ale aplicației includ un browser funcțional și o conexiune la internet. Browser-ul trebuie să
+                suporte tehnologiile web moderne pentru a asigura o funcționare corectă a aplicației.
+            </p>
+
+            <h3 id="communicationInterface"><span>4.2 </span>Interfață de comunicare</h3>
+            <p>
+                La nivelul comunicării dintre clienți și server se utilizează protocolul HTTP, asigurând astfel o interacțiune eficientă și securizată.
+                Serverul va răspunde cererilor HTTP trimise de browser-ele utilizatorilor, oferind paginile și datele necesare.
+            </p>
+        </section>
+
+        <section typeof="sa:MaterialsAndMethods" role="doc-chapter">
+            <h2 id="functionalRequirements"><span>5. </span>Cerințe funcționale</h2>
+
+            <h3 id="register"><span>5.1 </span> Home page (guest):</h3>
+            <p>
+                Vizitatorul site-ului poate vizualiza și crea postări, poate efectua o căutare utilizând bara de căutare
+                sau accesa butonul MyAccount pentru a fi redirecționat către pagina de logare. My Account permite
+                utilizatorului să acceseze pagina de login, unde există și opțiunea de înregistrare a unui cont nou. În secțiunea Search,
+                utilizatorul poate căuta o postare sau un user cu ajutorul unei bare de cautare. Your uploads
+                permite utilizatorului să selecteze o postare pentru a o accesa și vedea. Prin opțiunea Upload, utilizatorul
+                poate crea o postare nouă, completând titlul postării și încărcând documentul de cod din fisierele computerului, după
+                rezolvarea unei verificări tip captcha. Postarea va fi valabilă pe aplicație timp de 30 de zile.
+            </p>
+
+            <h3 id="login"><span>5.2 </span> Home page (logged-in user):</h3>
+            <p>
+                Utilizatorul conectat poate vizualiza și căuta postări utilizând bara de căutare și poate accesa toate celelalte
+                pagini și funcționalități ale aplicației. My Account permite utilizatorului să acceseze pagina unde își poate
+                vedea sau edita datele contului. În secțiunea Search, utilizatorul poate căuta o postare sau un user cu ajutorul
+                unui search bar. Your uploads permite utilizatorului să selecteze o postare pentru a o vedea,
+                modifica sau o poate elimina folosind butonul delete din dreptul postării. Prin opțiunea Upload, utilizatorul
+                poate crea o postare nouă, completând titlul postării și încărcând documentul de cod din computer, după
+                rezolvarea unei verificări tip captcha.
+            </p>
+
+            <h3 id="uploadrecipe"><span>5.3 </span> SignUp page:</h3>
+            <p>
+                Vizitatorul aplicației Web poate să își creeze un cont, completând formularul necesar cu un username, o parola si email-ul după care se va putea conecta
+                la noul cont și redirecționat către pagina principală (Home Page). Formularul de creare a contului permite alegerea
+                oricarui username care nu exista deja in aplicatie. Opțiunea Don't have account redirecționează utilizatorul către home page (guest).
+            </p>
+
+            <h3 id="searchrecipe"><span>5.4 </span> Login page:</h3>
+            <p>
+                Vizitatorul, care are deja un cont, poate completa informațiile valide în formularul de conectare, după
+                care va fi redirecționat către pagina principală (Home Page). Formularul de logare permite utilizatorului
+                să se conecteze la un cont deja existent folosind date valide, iar apoi acesta va fi redirecționat către
+                home page (logged-in user). Opțiunea Create one redirecționează utilizatorul către pagina de SignUp,
+                iar Don't have account îl redirecționează către home page (guest).
+            </p>
+
+
+            <h3 id="profilePage"><span>5.5 </span> Profile page:</h3>
+            <p>
+                Pagina de profil permite utilizatorilor să își gestioneze informațiile personale și setările contului.
+                Utilizatorul poate schimba parola contului personal prin opțiunea Change password. Opțiunea Help
+                redirecționează utilizatorul către documentația oficială a site-ului. Prin opțiunea Sign out,
+                utilizatorul se va deconecta de la cont și va fi redirecționat către Welcome page.
+            </p>
+
+            <h3 id="uploadPage"><span>5.6 </span> Upload page:</h3>
+            <p>
+                Pagina de upload permite utilizatorilor să gestioneze postările lor de cod sursă. Utilizatorul poate modifica continutul
+                postarii prin optiunea de Edit si va salva modificările făcute până în acel moment prin butonul de Save si dand un nume sugestiv versiunii de cod modificate.
+                Funcționalitatea Add contributors permite utilizatorului să adauge un contribuitor care va avea drept
+                de editare pentru acea postare, prin completarea unui pop-up cu username-ul contului. Utilizatorul
+                poate vedea contribuitorii postării prin opțiunea See contributors, care deschide un pop-up cu username-ul
+                conturilor contribuitoare. Prin opțiunea Rollback, utilizatorul poate reveni la o versiune anterioară a
+                postării de cod. Funcționalitatea Change Language permite utilizatorului să schimbe limbajul de cod pentru
+                acea postare, având opțiuni precum C, C++, JavaScript, Python sau Java.
+            </p>
+
+            <h3 id="visitPost"><span>5.7 </span> Visit post:</h3>
+            <p>
+                Pagina de vizualizare a unei postări permite utilizatorilor să vada contribuitorii și versiunile postării
+                respective. Utilizatorul poate vedea contribuitorii postării prin opțiunea See contributors, care deschide
+                un pop-up cu username-ul conturilor contribuitoare. Prin opțiunea Rollback, utilizatorul poate reveni
+                la o versiune anterioară a postării de cod.
+            </p>
+
+            <h3 id="visitUser"><span>5.8 </span> Visit user:</h3>
+            <p>
+                Pagina de vizualizare a unui utilizator permite utilizatorilor să vizualizeze profilul altor utilizatori
+                și postările acestora. Utilizatorul poate vedea postările unui utilizator specific in sectiunea pricipala User
+                uploads, și le poate accesa pentru a le vizualiza.
+            </p>
+
+            <h3 id="adminPage"><span>5.9 </span> Admin page:</h3>
+            <p>Pagina "Admin" permite administratorilor să gestioneze postările și utilizatorii din aplicația Paste It. Aceasta include funcționalități pentru ștergerea postărilor
+                și a conturilor de utilizator, oferind un control complet asupra conținutului și utilizatorilor aplicației.</p>
+            <ul>
+                <li><strong>Ștergere Postări:</strong> Administratorii pot șterge postările utilizatorilor care încalcă regulile comunității sau conțin conținut inadecvat.</li>
+                <li><strong>Ștergere Utilizatori:</strong> Administratorii pot șterge conturile de utilizator care încalcă termenii și condițiile de utilizare ale aplicației.</li>
+            </ul>
+            
+
+            <h3 id="aboutUs"><span>5.10 </span> About Us page:</h3>
+            <p>
+                Pagina "About Us" oferă informații despre echipa din spatele aplicației Paste It. Aceasta include imagini cu membrii echipei,
+                scurte descrieri ale fiecărui membru și adresele de contact (e-mail) ale acestora. Scopul acestei pagini este de a oferi
+                utilizatorilor o mai bună înțelegere a celor care au contribuit la dezvoltarea aplicației și de a facilita comunicarea
+                între utilizatori și dezvoltatori.
+            </p>
+
+        </section>
+
+        <section typeof="sa:MaterialsAndMethods" role="doc-chapter">
+            <h2 id="nonfunctionalRequirements"><span>6. </span>Cerințe nonfuncționale</h2>
+
+            <h3 id="safety"><span>6.1 </span>Cerințe de siguranță</h3>
+            <p>
+                O problemă legată de siguranță ar putea fi pierderea informațiilor din baza de date folosită. Este important să se monitorizeze
+                constant integritatea bazei de date și să se implementeze protocoale de back-up sau recuperare în caz de corupere a datelor sau atacuri cibernetice.
+                Pentru a proteja aplicația de spam și alte activități malițioase, se utilizează verificari CAPTCHA în procesul de creare a postărilor, pentru a preveni spam-ul sau alte utilizari nedorite.
+            </p>
+
+            <h3 id="security"><span>6.2 </span>Cerințe de securitate</h3>
+            <p>
+                Aplicația nu are cerințe de securitate speciale, iar orice utilizator o poate folosi fără a avea posibilitatea de a beneficia
+                de anumite privilegii (nu există variantă de cont premium). Cu toate acestea, este esențial să se asigure că datele utilizatorilor
+                sunt protejate prin criptare și să se implementeze măsuri de prevenire a accesului neautorizat, precum autentificarea prin parolă
+                și verificări de securitate pentru acțiuni critice. Utilizarea CAPTCHA la momentul creării postărilor de către utilizatorii neautentificați
+                contribuie la prevenirea accesului automatizat și la protejarea integrității datelor. În plus, utilizarea SSL (Secure Sockets Layer) asigură
+                o conexiune securizată între client și server, protejând datele transmise de interceptare și atacuri cibernetice.
+            </p>
+
+
+            <h3 id="qualities"><span>6.3 </span> Calități software</h3>
+            <p>
+                Aplicația Paste It trebuie să îndeplinească următoarele calități software pentru a asigura o experiență optimă pentru utilizatori:
+            </p>
+            <ul>
+                <li><strong>Portabilitate:</strong> Aplicația trebuie să fie utilizabilă pe diverse platforme și dispozitive, fără necesitatea unor modificări majore.</li>
+                <li><strong>Adaptabilitate:</strong> Aplicația trebuie să fie capabilă să se adapteze la diferite medii de utilizare și să răspundă eficient la schimbările de cerințe ale utilizatorilor.</li>
+                <li><strong>Reutilizabilitate:</strong> Componentele software ale aplicației trebuie să fie proiectate astfel încât să poată fi reutilizate în alte proiecte sau contexte, economisind timp și resurse de dezvoltare.</li>
+                <li><strong>Disponibilitate:</strong> Aplicația trebuie să fie disponibilă pentru utilizatori în orice moment, minimizând timpul de nefuncționare și asigurând accesul continuu la funcționalități.</li>
+                <li><strong>Flexibilitate:</strong> Aplicația trebuie să fie flexibilă pentru a permite actualizări și extinderi viitoare fără a afecta funcționalitatea existentă.</li>
+                <li><strong>Consistență:</strong> Aplicația trebuie să ofere o experiență de utilizare consistentă, asigurându-se că toate funcționalitățile și interfețele sunt coerente și ușor de utilizat.</li>
+            </ul>
+        </section>
+        <section typeof="sa:MaterialsAndMethods" role="doc-chapter">
+            <h2 id="c4Diagram"><span>7. </span>C4 Diagram</h2>
+            <p>
+                Diagrama C4 oferă o vedere de ansamblu asupra arhitecturii aplicației Paste It, ilustrând componentele principale și relațiile dintre ele. 
+                Aceasta ajută la înțelegerea structurii aplicației și la identificarea principalelor module și interacțiuni.
+            </p>
+            <img src="./Poze/Paste It Project Diagram.drawio.png" alt="Paste It Project Diagram" width="700">
+        </section>
+                
+    </article>
+</body>
+
+</html>

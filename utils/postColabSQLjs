@@ -1,0 +1,13 @@
+const postColabSQL = {
+    insertNewCollab:
+        "INSERT INTO user_uploads (user_id, upload_id) VALUES (?, ?)",
+
+    getUsersIDs:
+        "Select user_id from user_uploads where upload_id = ?",
+
+    checkExistence:
+        "Select id from user_uploads where user_id = ? AND upload_id = ? "
+   
+}
+
+module.exports = postColabSQL;

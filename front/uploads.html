@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Details</title>
+    <!-- Include Highlight.js CSS for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/monokai-sublime.min.css">
+    <!-- Include Highlight.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <!-- Include languages for Highlight.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/cpp.min.js"></script>
+    <link rel="stylesheet" href="../../upload.css">
+
+</head>
+
+<body>
+    <header>
+        <img src="../../iconRacheta.webp" alt="Logo" class="logo">
+        <span class="description-title">Description: <span id="description"></span></span>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+    <div class="content">
+        <aside class="sidebar-left" id="sidebar">
+            <button id="editBtn">Edit</button>
+            <button id="saveBtn" class="hidden">Save</button>
+            <button id="addContributorsBtn">Add Contributors</button>
+            <button id="seeContributorsBtn">See Contributors</button>
+            <button id="rollBackBtn" class="rollback-btn">RollBack</button>
+            <button id="exportBtn">Export</button>
+        </aside>
+        <main class="main-content">
+            <pre><code id="textContent" class="hljs language-c"></code></pre>
+        </main>
+    </div>
+
+    <div id="contributorsSeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close contributors-see-close">&times;</span>
+            <h2>Contributors List</h2>
+            <ul id="contributorsSeeList"></ul>
+        </div>
+    </div>
+
+    <div id="contributorsModal" class="modal">
+        <div class="modal-content">
+            <span class="close contributors-close">&times;</span>
+            <h2>Add Contributor</h2>
+            <form id="contributorsForm">
+                <input type="text" id="searchContributorsInput" placeholder="Type to search...">
+                <div id="contributorsList"></div>
+                <button type="submit" class="btn">Save Contributor</button>
+            </form>
+            <div id="contributorsList"></div>
+        </div>
+    </div>
+
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <span class="close save-close">&times;</span>
+            <h2>Add Description</h2>
+            <form id="saveForm">
+                <label for="descriptionInput">Description (max 20 words):</label>
+                <input type="text" id="descriptionInput" maxlength="160" placeholder="Enter description here...">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="versionModal" class="modal">
+        <div class="modal-content">
+            <span class="close version-close">&times;</span>
+            <h2>Select Version</h2>
+            <div id="versionList"></div>
+        </div>
+    </div>
+
+    <div id="languageModal" class="modal">
+        <div class="modal-content">
+            <span class="close language-close">&times;</span>
+            <h2>Select Language</h2>
+            <select id="languageSelect">
+                <option value="c">C</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <!-- Add more languages as needed -->
+            </select>
+            <button id="applyLanguageBtn">Apply</button>
+        </div>
+    </div>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+            const uploadId = localStorage.getItem('selectedUploadId');
+
+            const response = await fetch(`/api/uploadsDetails?id=${uploadId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const uploadDetails = await response.json();
+                console.log('Upload details:', uploadDetails);  // Debugging
+                document.getElementById('description').textContent = uploadDetails.description;
+                document.getElementById('textContent').textContent = uploadDetails.text;
+                hljs.highlightAll();
+            } else {
+                alert('Error fetching upload details.');
+            }
+
+            document.getElementById('editBtn').addEventListener('click', () => {
+                document.getElementById('textContent').contentEditable = 'true';
+                document.getElementById('textContent').focus();
+                document.getElementById('editBtn').classList.add('hidden');
+                document.getElementById('saveBtn').classList.remove('hidden');
+            });
+
+            document.getElementById('saveBtn').addEventListener('click', () => {
+                document.getElementById('saveModal').style.display = 'flex';
+            });
+
+            document.querySelector('.save-close').onclick = function () {
+                document.getElementById('saveModal').style.display = 'none';
+            };
+
+            document.getElementById('saveForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const newText = document.getElementById('textContent').textContent;
+                const description = document.getElementById('descriptionInput').value;
+
+                const updateResponse = await fetch(`/api/uploadsDetails?id=${uploadId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: newText,
+                        description: description
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    alert('Upload updated successfully.');
+                    document.getElementById('textContent').contentEditable = 'false';
+                    document.getElementById('editBtn').classList.remove('hidden');
+                    document.getElementById('saveBtn').classList.add('hidden');
+                    document.getElementById('saveModal').style.display = 'none';
+                    hljs.highlightAll();
+                } else {
+                    alert('Error updating upload.');
+                }
+            });
+
+            document.getElementById('rollBackBtn').addEventListener('click', async () => {
+                const modal = document.getElementById('versionModal');
+                const versionList = document.getElementById('versionList');
+
+                const rollBackResponse = await fetch(`/api/uploadsDetails/rollBack?id=${uploadId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (rollBackResponse.ok) {
+                    const versions = await rollBackResponse.json();
+                    console.log('Versions:', versions);  // Debugging
+                    versionList.innerHTML = '';
+                    versions.forEach((version, index) => {
+                        const button = document.createElement('button');
+                        button.className = 'version-button';
+                        let desc = version.description ? ` - ${version.description}` : '';
+                        let date = version.date ? ` - ${new Date(version.date).toLocaleDateString()}` : '';
+                        button.textContent = `Version ${index + 1}${desc}${date}`;
+
+                        button.addEventListener('click', async () => {
+                            const versionResponse = await fetch(`/api/uploadsDetails/rollBack/oldVersion?id=${version.id}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+
+                            if (versionResponse.ok) {
+                                const versionDetails = await versionResponse.json();
+                                console.log('Version details:', versionDetails);  // Debugging
+                                document.getElementById('description').textContent = versionDetails.description;
+                                document.getElementById('textContent').textContent = versionDetails.textContent;
+                                hljs.highlightAll();
+                                const isLatestVersion = index === versions.length - 1;
+                                document.getElementById('textContent').contentEditable = isLatestVersion;
+                                document.getElementById('editBtn').style.display = isLatestVersion ? 'block' : 'none';
+                                modal.style.display = 'none';
+                            } else {
+                                alert('Error fetching version details.');
+                            }
+                        });
+                        versionList.appendChild(button);
+                    });
+                    modal.style.display = 'flex';
+                } else {
+                    alert('Error fetching versions.');
+                }
+
+                document.querySelector('.version-close').onclick = function () {
+                    modal.style.display = 'none';
+                };
+            });
+
+            document.getElementById('seeContributorsBtn').addEventListener('click', async () => {
+                const fetchResponse = await fetch(`/api/Contributors?uploadId=${uploadId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
+
+                if (fetchResponse.ok) {
+                    const contributors = await fetchResponse.json();
+                    console.log('Contributors:', contributors);  
+                    const contributorsSeeList = document.getElementById('contributorsSeeList');
+                    contributorsSeeList.innerHTML = ''; 
+                    contributors.forEach(contributor => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = contributor;
+                        contributorsSeeList.appendChild(listItem);
+                    });
+                    document.getElementById('contributorsSeeModal').style.display = 'flex';
+                } else {
+                    alert('Failed to fetch contributors.');
+                }
+            });
+
+            document.querySelector('.contributors-see-close').addEventListener('click', () => {
+                document.getElementById('contributorsSeeModal').style.display = 'none';
+            });
+
+            document.getElementById('addContributorsBtn').addEventListener('click', () => {
+                document.getElementById('contributorsModal').style.display = 'flex';
+                document.getElementById('searchContributorsInput').focus();
+            });
+
+            document.querySelector('.contributors-close').onclick = function () {
+                document.getElementById('contributorsModal').style.display = 'none';
+            };
+
+            document.getElementById('searchContributorsInput').addEventListener('input', async (event) => {
+                const searchQuery = event.target.value;
+                if (searchQuery.length > 0) {
+                    const fetchResponse = await fetch(`/api/users?username=${searchQuery}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (fetchResponse.ok) {
+                        const users = await fetchResponse.json();
+                        console.log('Users:', users);  // Debugging
+                        const contributorsList = document.getElementById('contributorsList');
+                        contributorsList.innerHTML = '';
+                        users.forEach(user => {
+                            const userItem = document.createElement('div');
+                            userItem.textContent = user.username;
+                            userItem.className = 'user-item';
+                            userItem.onclick = async () => {
+                                const putResponse = await fetch(`/api/addContributor`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Authorization': `Bearer ${token}`,
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ userId: user.id })
+                                });
+
+                                if (putResponse.ok) {
+                                    alert('Contributor added successfully.');
+                                    document.getElementById('contributorsModal').style.display = 'none';
+                                } else {
+                                    alert('Error adding contributor.');
+                                }
+                            };
+                            contributorsList.appendChild(userItem);
+                        });
+                    } else {
+                        console.error('Error fetching users.');
+                    }
+                } else {
+                    document.getElementById('contributorsList').innerHTML = '';
+                }
+            });
+
+            document.getElementById('contributorsForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const contributorName = document.getElementById('searchContributorsInput').value;
+
+                if (contributorName.length > 0) {
+                    const putResponse = await fetch(`/api/Contributors`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: contributorName,
+                            uploadId: uploadId
+                        })
+                    });
+
+                    if (putResponse.ok) {
+                        alert('Contributor saved successfully.');
+                        document.getElementById('contributorsModal').style.display = 'none';
+                    } else {
+                        const errorMessage = await putResponse.text();
+                        alert(`Error saving contributor: ${errorMessage}`);
+                    }
+                } else {
+                    alert('Please enter a contributor name.');
+                }
+            });
+
+            // Language selection modal
+            const languageModal = document.getElementById('languageModal');
+            const languageSelect = document.getElementById('languageSelect');
+            const applyLanguageBtn = document.getElementById('applyLanguageBtn');
+
+            document.getElementById('rollBackBtn').insertAdjacentHTML('afterend', '<button id="changeLanguageBtn">Change Language</button>');
+            document.getElementById('changeLanguageBtn').addEventListener('click', () => {
+                languageModal.style.display = 'flex';
+            });
+
+            document.querySelector('.language-close').onclick = function () {
+                languageModal.style.display = 'none';
+            };
+
+            applyLanguageBtn.addEventListener('click', async () => {
+                const selectedLanguage = languageSelect.value;
+                const languageComponent = document.createElement('script');
+                languageComponent.src = `https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/${selectedLanguage}.min.js`;
+
+                document.body.appendChild(languageComponent);
+                languageComponent.onload = () => {
+                    document.getElementById('textContent').className = `hljs ${selectedLanguage}`;
+                    hljs.highlightAll();
+                    languageModal.style.display = 'none';
+                };
+            });
+
+            window.onclick = function (event) {
+                if (event.target == languageModal) {
+                    languageModal.style.display = 'none';
+                }
+            };
+
+            // Export button functionality
+            document.getElementById('exportBtn').addEventListener('click', () => {
+                const textContent = document.getElementById('textContent').textContent;
+
+                // Convert to JSON
+                const jsonContent = JSON.stringify({ text: textContent }, null, 2);
+                downloadFile(jsonContent, 'export.json', 'application/json');
+
+                // Convert to CSV
+                const csvContent = `text\n"${textContent.replace(/"/g, '""')}"`;
+                downloadFile(csvContent, 'export.csv', 'text/csv');
+            });
+
+            function downloadFile(content, fileName, mimeType) {
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        });
+
+    </script>
+</body>
+
+</html>

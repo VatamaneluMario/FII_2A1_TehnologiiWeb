@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing Platform</title>
+    <link rel="stylesheet" href="../../style2.css">
+    <style>
+        .btn-link {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-link:hover {
+            background-color: #0056b3;
+        }
+        .additional-info-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .additional-info-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="../../Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <form id="searchForm" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input" id="searchQuery">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        
+        <script>
+            document.getElementById('searchForm').onsubmit = function(event) {
+                event.preventDefault();
+                const query = document.getElementById('searchQuery').value;
+                localStorage.setItem('lastSearchQuery', query); 
+                window.location.href = `/user/searchResults`; 
+            }
+        </script>
+        <a href="/userGuest" class="user-icon-link" aria-label="User profile">
+            <img src="../../Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+    </header>
+
+    <aside class="sidebar-left">
+        <button id="profileBtn" class="additional-info-btn">Profile</button>
+        <button id="helpBtn" class="additional-info-btn">Help</button>
+        <button id="aboutUsBtn" class="additional-info-btn">About us</button>
+        <button id="logoutBtn" class="additional-info-btn">Logout</button>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1 id="uploads-title">Your uploads:</h1>
+            <div id="uploads-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Removed the upload button and modal -->
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set the uploads title with the user's name from localStorage
+            const visitName = localStorage.getItem('visitName') || 'Your';
+            document.getElementById('uploads-title').textContent = `${visitName} uploads:`;
+
+            const uploadForm = document.getElementById("uploadForm");
+
+            async function fetchUserData() {
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`/user/data?visitName=${visitName}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (response.ok) {
+                        const userData = await response.json();
+                        const uploadsContainer = document.getElementById('uploads-container');
+                        uploadsContainer.innerHTML = '';
+                        userData.forEach(upload => {
+                            const uploadDiv = document.createElement('div');
+                            uploadDiv.classList.add('upload-info');
+                            uploadDiv.innerHTML = `
+                                <button class="description-label" data-id="${upload.id}">${upload.description}</button>
+                                <span class="upload-data-label">${upload.date}</span>
+                            `;
+                            uploadsContainer.appendChild(uploadDiv);
+                        });
+
+                        document.querySelectorAll('.description-label').forEach(button => {
+                            button.addEventListener('click', function() {
+                                const id = this.getAttribute('data-id');
+                                localStorage.setItem('selectedUploadId', id);
+                                window.location.href = '/user/searchResult/visitPost';
+                            });
+                        });
+                    } else {
+                        document.getElementById('uploads-container').innerHTML = '<p>Error fetching user data</p>';
+                    }
+                } catch (error) {
+                    document.getElementById('uploads-container').innerHTML = '<p>Error fetching user data</p>';
+                }
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                alert('You have been logged out.');
+                window.location.href = '/';
+            });
+
+            document.getElementById('profileBtn').addEventListener('click', () => {
+                window.location.href = '/userGuest';
+            });
+
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                window.location.href = '/PIt_Documentatie_Sarghi_Vatamanelu.html';
+            });
+
+            document.getElementById('aboutUsBtn').addEventListener('click', () => {
+                window.location.href = '/AboutUs';
+            });
+
+            fetchUserData();
+        });
+    </script>
+</body>
+</html>

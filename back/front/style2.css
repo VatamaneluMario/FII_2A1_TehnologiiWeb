@@ -1,0 +1,309 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 100px 1fr 80px;
+    height: 100vh;
+    color: white;
+    background: #050009;
+    font-size: 20px;
+}
+
+header, footer, .sidebar-left, main {
+    padding: 20px;
+    background: #050009;
+}
+
+header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #050009;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-left: 50px;
+    background: url('logo-placeholder.png') no-repeat center center;
+    background-size: contain;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+}
+
+.search-input {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    width: 100%; 
+}
+
+.search-button {
+    padding: 5px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #A34343;
+    color: white;
+}
+
+.user-icon-link {
+    display: inline-block; 
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+}
+
+.user-icon {
+    width: 40px; 
+    height: 40px; 
+    margin-right: 50px;
+    border-radius: 50%; 
+    transition: opacity 0.3s ease; 
+}
+
+.user-icon-link:hover .user-icon {
+    opacity: 0.8;
+}
+.sidebar-left {
+   
+    grid-row: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    width: 25%;
+    min-width: 200px;
+    color: white;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+.sidebar-left button {
+    display: block;        /* Așează butoanele unul sub altul */
+    width: 90%;            /* Reducem latimea fiecărui buton la 80% din lățimea containerului său */
+    padding: 15px 25px;    /* Reducem spațiul intern pentru text */
+    margin: 15px auto;     /* Centrăm butoanele orizontal și reducem spațiul dintre ele */
+    background-color: #A34343; /* Culoare de fundal specificată */
+    color: white;          /* Textul alb pentru contrast */
+    border: none;          /* Fără borduri vizibile, corecție a sintaxei */
+    cursor: pointer;       /* Cursor sub formă de mână pentru interactivitate */
+    text-align: center;    /* Text aliniat la centru */
+    border-radius: 25px;   /* Ajustăm rotunjirea colțurilor */
+}
+
+.sidebar-left button ul {
+    padding-left: 20px;    /* Reducem indentarea pentru lista din buton */
+}
+
+.sidebar-left button:hover {
+    background-color: #630808; /* Culoare mai închisă la hover */
+}
+
+.additional-info ul {
+    list-style-type: none; 
+    padding-left: 0; 
+}
+
+.additional-info li {
+    display: block; 
+}
+.home {
+    color: #A34343;
+    font-size: 50px;
+    text-align: center;
+    margin-bottom: 70px;
+}
+
+.status-message, .upload-message, .additional-info {
+    color: white;
+    font-size: 15px;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+main {
+    grid-column: 2 / 2;
+    grid-row: 2 / 3;
+    background: white;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.uploads-section h1 {
+    font-size: 40px;
+}
+
+.upload-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+.description-label, .upload-data-label {
+    font-size: 20px;
+}
+
+
+.upload-duration {
+    background: #12021F;
+    color: white;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 30px;
+    text-align: center;
+    display: inline-block;
+    width: fit-content; 
+    margin: 0 auto; 
+}
+
+footer {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#myBtn {
+    background-color: #A34343;
+    border: none; 
+    color: white;
+    padding: 12px 24px; 
+    text-align: center; 
+    text-decoration: none;
+    display: inline-block; 
+    font-size: 16px; 
+    border-radius: 20px; 
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, box-shadow 0.2s ease-in-out; 
+    
+    background-image: linear-gradient(to right, #A34343, #A34343);
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+#myBtn:hover {
+    background-image: linear-gradient(to right, #275b8d, #613e8e); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+}
+
+
+@media (max-width: 1024px) {
+    body {
+        grid-template-columns: 200px 1fr;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    body {
+        grid-template-columns: 0px 1fr;
+        font-size: 10;
+    }
+   
+}
+
+
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4); 
+  }
+  
+  .search-button {
+    padding: 5px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    background-color: #A34343;
+    color: white;
+}
+
+.search-button:hover{
+    background-image: linear-gradient(to right, #275b8d, #613e8e); 
+
+}
+
+  .modal-content {
+    background-color: #12021F;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    width: 40%;
+  }
+  
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #630808;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .profile-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.profile {
+    width: 45%; /* Adjust width based on preference */
+    margin: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Optional: Adds shadow for better visibility */
+    text-align: center; /* Aligns text to the center */
+}
+
+.profile h3 {
+    margin-top: 50px;
+}
+
+.profile p {
+    font-size: 0.9em;
+    color: #666;
+    line-height: 1.5;
+}
+
+.profile img {
+    width: 300px; /* Adjust this value to fit your design */
+    height: 300px; /* Ensure this is the same as the width for square images */
+    object-fit: cover; /* This ensures the image covers the set width/height without distortion */
+    border-radius: 10px; /* Optional: Rounds corners of the image */
+}

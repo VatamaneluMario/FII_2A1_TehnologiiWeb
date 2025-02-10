@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="subject" content="Paste It Project">
+    <meta name="description" content="PIt where you can paste or get your code ">
+    <meta name="author" content="Sarghi Vladut-Gabriel Vatamanelu Mario-Narcis">
+    <title>Scholarly HTML</title>
+    <!-- <link rel="stylesheet" href="style_scholarly.css"> -->
+  
+</head>
+
+<body prefix="schema: http://schema.org" itemscope="" itemtype="http://schema.org/WebPage">
+    <h1 itemprop="name">Paste It Project</h1>
+    <ol>
+        <li>
+            <a href="#authors"> <span>1 </span>Autori</a>
+        </li>
+        <li>
+            <a href="#introduction"> <span>2 </span>Introducere</a>
+            <ol>
+                <li><a href="#scop"> <span>2.1 </span>Scopul documentului</a></li>
+                <li><a href="#conventions"> <span>2.2</span> Conventiile documentului</a></li>
+                <li><a href="#userTarget"><span>2.3</span> Audienta Tinta</a></li>
+                <li><a href="#productScope"><span>2.4</span> Scopul produsului</a></li>
+                <li><a href="#references"><span>2.5</span> Referinte</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#generalDescription"><span>3.</span> Descrierea generala</a>
+            <ol>
+                <li><a href="#productPerspective"><span>3.1</span> Descrierea produsului</a></li>
+                <li><a href="#productFunctions"><span>3.2</span> Functionalitatile produsului</a></li>
+                <li><a href="#usersCategorii"><span>3.3</span> Categorii de utilizatori</a></li>
+                <li><a href="#operationEnvironment"><span>3.4</span> Mediu de operare</a></li>
+                <li><a href="#designConstrains"><span>3.5</span> Design si constrangeri de implementare</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#externalRequirements"><span>4.</span> Cerințe interfetei</a>
+            <ol>
+                <li><a href="#softwareInterface"><span>4.1</span> Interfață software</a></li>
+                <li><a href="#communicationInterface"><span>4.2</span> Interfață de comunicare</a></li>
+            </ol>
+        </li>
+        <li>
+            <a href="#functionalRequirements"><span>5.</span>Cerințe funcționale</a>
+            <ol>
+                <li><a href="#register"><span>5.1 </span>Home page(Guest)</a></li>
+                <li><a href="#login"><span>5.2 </span>Home Page(logged-in user)</a></li>
+                <li><a href="#uploadrecipe"><span>5.3 </span>SingUp page</a></li>
+                <li><a href="#searchrecipe"><span>5.4 </span>Login page</a></li>    
+            </ol>
+        </li>
+        <li>
+            <a href="#nonfunctionalRequirements"><span>6. </span>Cerințe nonfuncționale</a>
+            <ol>
+                <li><a href="#safety"><span>6.1 </span>Cerințe de siguranță</a></li>
+                <li><a href="#security"><span>6.2 </span>Cerințe de securitate</a></li>
+            </ol>
+        </li>
+    </ol>
+
+
+    <article id = "article" typeof = "schema:ScholarlyArticle" resource = "#"> 
+        <section id="authors"  typeof="sa:AuthorsList"> 
+                <h2><span>1. </span>Autori</h2>
+                <ol> 
+                    <li property = "schema:author" typeof="sa:ContributorRole"> 
+                        <a property = "schema:author" href="#" typeof="schema:Person"> 
+                                <span property= "schema:giveName" >Vladut-Gabriel</span>
+                                <span property= "schema:familyName" >Sarghi</span>
+                        </a>
+                        <sup property="sa:roleContactPoint" typeof="schema:ContactPoint">
+                            <a property="schema:email" href="sarghivladut17@gmail.com" title="corresponding author">&#9993;</a>
+                        </sup>
+                    </li>
+
+                    <li property = "schema:author" typeof="sa:ContributorRole"> 
+                        <a property = "schema:author" href="#" typeof="schema:Person"> 
+                                <span property= "schema:giveName" >Mario-Narcis</span>
+                                <span property= "schema:familyName" >Vatamanelu</span>
+                        </a>
+                        <sup property="sa:roleContactPoint" typeof="schema:ContactPoint">
+                            <a property="schema:email" href="vatamanelu.narcis@gmail.com" title="corresponding author">&#9993;</a>
+                        </sup>
+                    </li>
+                </ol>
+        </section>
+
+
+        <section typeof="sa:ScholarlyArticle" role="doc-introduction" >
+                <h2 id="introduction"> <span>2. </span>Introducere</h2>
+                <p> 
+                </p>
+                
+                <h3 id="scope"><span>2.1 </span> Scopul documentului</h3>
+                <p>  
+                   Scopul acestui document este sa prezinte o descriere detaliata a aplicatiei Web Paste It bazata pe proiectul propus PIt (Paste It). Acesta va explica scopul si functionalitatile aplicatiei, interfata aplicatiei si constrangerile acesteia. Acest document este destinat potentialilor utilizatori ai aplicatiei.
+                </p>
+                
+                <h3 id="conventions"><span>2.2 </span>Conventiile documentului</h3>
+                <p>
+                    Acest document a fost create pe baza modelului IEEE System Requirement Specification Documents.
+                </p>
+
+                <h3 id="userTarget"><span>2.3 </span> Audienta tinta</h3>
+                <p>
+                   Persoane obisnuite care vor sa distribuie cod online in diferite limbaje de programare, intr-un mediu creat in acest sens (ex. elevi/studenti, programatori, cursanti sau persoanele interesate de programare)
+                    
+                </p>
+                <h3 id="productScope"><span>2.4 </span> Scopul Produsului</h3>           
+                <p>
+                    Paste It a fost dezvoltat cu scopul de a ajuta si incuraja oamenii sa invete programare si sa distribuie cod cu alti utilizatori intr-un mediu eficient si organizat. De asemenea, el poate fi folosit pentru colaborarea asupra codului sursa intr-un mod flexibil si personalizabil. 
+                </p>
+                <h3 id="references"><span>2.5 </span> Referinte</h3> 
+                    <ol>
+                        <li><a href="https://www.w3schools.com/css/">https://www.w3schools.com/css/<a></li>
+                        <li><a href="https://www.w3schools.com/css/">https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css<a></li>
+                        <li><a href="https://github.com/rick4470/IEEE-SRS-Tempate">IEEE Template for System Requirements Specification Documents<a></li>
+                    </ol>    
+        </section>
+
+        <section  typeof="sa:MaterialsAndMethods" role="doc-chapter" >
+            <h2 id="generalDescription"> <span>3. </span>Descriere generală</h2>
+            
+
+            <h3 id= "productPerspective"> <span>3.1 </span>Descrierea produsului</h3>
+            <p>
+               Paste It este o aplicatie Web care realizeaza managementul postarilor ce contin cod sursa pentru diferite limbaje de programare. Aplicatia este destinata dezvoltatorilor si pasionatilor de programare care doresc sa impartaseasca si sa colaboreze asupra codului sursa.
+            </p> 
+
+            <h3 id= "productFunctions"> <span>3.2 </span>Funcționalitățile produsului</h3>
+            <p>  
+               Aplicatia ofera posibilitatea de a cauta postari dupa nume (intr-un search bar) sau categorie cat si de a cauta alti utilizatori. PIt permite vizitatorilor website-ului sa caute postari sau sa distribuie cod fara a avea un cont creat sau sa se inregistreze/logheze. Utilizatorii logati pot, in plus, selecta alti utilizatori cu drepturi de modificare sau pot avea acces la functionalitatile "burn after read" sau "password protected". De asemenea, aplicatia permite limitarea duratei de pastrare a postarilor si sintax highlighting pentru codul sursa.
+
+               <h4>Home Page(guest)</h4>
+               <ul>
+                    <li>My account: utilizatorul este redirectionat catre pagina de login (unde exista si optiunea de inregistrare)</li>
+                    <li>Search section: utilizatorul poate cauta o postare cu ajutorul unui search bar.</li>
+                    <li>Products: utilizatorul poate selecta o postare pentru a o accesa si vedea.</li>
+                    <li>Upload Data: utilizatorul poate face o postare ce va fi valabila pe aplicatie 30 de zile.</li>
+               </ul>
+                <h4>Home Page(logged-in user)</h4>
+               <ul>
+                    <li>Account settings: utilizatorul este redirectionat catre pagina unde isi poate edita datele contului.</li>
+                    <li>Search section: utilizatorul poate cauta o postare cu ajutorul unui search bar.</li>
+                    <li>Uploads: utilizatorul poate selecta o postare anterioara pentru a o vedea.</li>
+                    <li>Upload Data: utilizatorul poate face o postare si va fi redirectionat pe pagina specifica de upload.</li>
+               </ul>
+                <h4>SignUp page</h4>
+               <ul>
+                    <li>Create account form: utilizatorul creeaza un cont nou folosind date valide, iar apoi este redirectionat catre home page (logged-in user)</li>
+                    <li>Login: utilizatorul va fi redirectionat catre pagina de logare</li>
+                    <li>Don't have account: utilizatorul este redirectionat catre home page (guest)</li>
+                    
+               </ul>
+                <h4>Welcome page</h4>
+               <ul>
+                    <li>Login form: utilizatorul se conecteaza la un cont deja existent folosind date valide, iar apoi este redirectionat catre home page (logged-in user)</li>
+                    <li>Create one: utilizatorul este redirectionat catre pagina de SignUp page</li>
+                    <li>Don't have account: utilizatorul este redirectionat catre home page (guest)</li>
+               </ul>
+               <h4>Profile page</h4>
+               <ul>
+                    <li>Change icon: utilizatorul isi poate alege o fotografie ce va fi atasata contului personal</li>
+                    <li>Edit profile: utilizatorul va fi redirectionat catre pagina de editare a datelor contului</li>
+                    <li>Sign out: utilizatorul se va deconecta de la cont si va fi redirectionat catre Welcome page</li>
+                    
+               </ul>
+
+            </p>
+
+            <h3 id= "classesAndCharacteristics"> <span>3.3 </span>Categorii de utilizatori</h3>
+            <p>
+                <ul>
+                    <li>Guest: simplu visitator al site-ului ce nu poate accesa toate facilitatile site-ului. Acesta poate vedea postari existente pe platforma si crea postari valabile maxim 30 de zile.</li>
+                    <li>User: utilizator cu un cont creat si stocat in baza de date ce poate accesa toate facilitatile site-ului.</li>
+               </ul>
+            </p>
+         
+            <h3 id= "operationEnvironment"> <span>3.4</span> Mediu de operare </h3>
+            <p>              
+               Fiind o aplicatie Web, Paste It poate fi utilizata in orice browser ce rulează HTML, CSS, netinand cont de o versiune anume a sistemului de operare a device-ului pe care ruleaza aplicatia.
+            </p>
+
+            <h3 id= "designConstrains"> <span>3.5</span> Design și constrângeri de implementare </h3>
+            <p>      
+                Aplicatia Paste It va fi dezvoltata in Node.js pentru partea de backend si utilizand html, css si javascript pentru partea de frontend.
+            </p>
+
+        </section>
+
+        <section  typeof="sa:MaterialsAndMethods" role="doc-chapter">    
+
+            <h2 id="externalRequirements"><span>4. </span> Cerinte externe</h2>
+
+            <h3 id="softwareInterface"><span>4.1 </span>Interfață software</h3>
+            <p>
+               Paste It dispune de conectare la o baza de date relationala: MySQL, pentru a stoca datele utilizatorilor cat si a postarilor. Cerintele minime software ale aplicatiei sunt un browser functional si conexiune la internet.
+            </p>
+            
+            <h3 id="communicationInterface"><span>4.2 </span>Interfață de comunicare</h3>
+            <p>
+                La nivelul comunicării dintre clienti si server se utilizeaza protocolul HTTP.
+            </p>
+            
+
+        </section>
+   
+        <section  typeof="sa:MaterialsAndMethods" role="doc-chapter">   
+
+            <h2 id="functionalRequirements"><span>5. </span>Cerințe funcționale</h2>
+
+            <h3 id="register"><span>5.1 </span> Home page (guest):</h3>
+            <p>
+                Vizitatorul siteului poate vizualiza si crea postari, poate efectua o cautare utilizand bara de cautare sau accesa butonul MyAccount pentru a fi redirectionat catre pagina de logare.
+            </p>
+
+            <h3 id="login"><span>5.2 </span>  Home page (logged-in user):</h3>
+            <p>
+                Utilizatorul conectat poate  vizualiza si cauta postari utilizand bara de cautare si poate accesa toate celelalte pagini si functionalitati ale aplicatiei. 
+            </p>
+            
+            <h3  typeof="sa:MaterialsAndMethods" role="doc-chapter" id="uploadrecipe"><span>5.3 </span> SignUp page:</h3>
+            <p>
+               Vizitatorul aplicatiiei Web poate sa isi creeze un cont, completand formularul necesar, dupa care va fi conectat la nou cont si redirectionat catre pagina principala (Home Page). 
+            </p>
+
+
+            <h3 id="searchrecipe"><span>5.4 </span>Login page:</h3>
+            <p>
+                Vizitatorul, care are deja un cont, poate completa informatiile valide in fomularul de conectare, dupa aceasta va fi redirectionat catre pagina principala (Home Page).
+            </p>
+            
+        </section>
+        <section  typeof="sa:MaterialsAndMethods" role="doc-chapter">   
+
+            <h2 id="nonfunctionalRequirements"><span>6. </span>Cerinte nonfunctionale</h3> 
+            <h3 id = "safety"> <span>6.1</span> Cerințe de siguranță</h3>
+            <p>
+                O problema legata de siguranta ar putea fi pierderea informatiilor din baza de date folosita.
+            </p> 
+
+            <h3 id = "security"><span>6.2</span> Cerințe de securitate </h3>
+            <p>
+                Aplicatia nu are cerinte de securitate, iar orice utilizator o poate folosi fara a avea posibilitatea de a beneficia de anumite privilegii. (nu exista varinta de cont premium).
+            </p> 
+             <h3 id = "security"><span>6.3</span>Calitati software </h3>
+             <ul>
+                 <li>Portabilitate</li>
+                 <li>Adaptabilitate</li>
+                 <li>Reutilizabilitate</li>
+                 <li>Disponibilitate</li>
+                 <li>Flexibilitate</li>
+                 <li>Consistenta</li>
+             </ul>
+        </section>
+
+    </article>
+</body>
+</html>

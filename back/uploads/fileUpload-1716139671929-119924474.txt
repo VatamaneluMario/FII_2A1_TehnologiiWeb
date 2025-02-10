@@ -1,0 +1,135 @@
+package com.mycompany.iplab1;
+
+abstract class Spital {
+
+    private String nume;
+    private String adresa;
+
+    String sectie;
+    String tip;
+
+    int nrAngajati;
+
+    Spital() {
+        nume = "Sf. Spiridon";
+        adresa = "Bulevardul Independentei 1, Iasi, judetul Iasi";
+    }
+
+    String getSpital() {
+        return nume;
+    }
+
+    String getSpitalAdresa() {
+        return adresa;
+    }
+
+    abstract String sectie();
+
+    abstract int getNrAngajati();
+
+    abstract void setNrAngajati(int numar);
+
+}
+
+class SectiePlamani extends Spital {
+
+    String sectie() {
+        return "Sectia de plamani";
+    }
+
+    int getNrAngajati() {
+        return this.nrAngajati;
+    }
+
+    void setNrAngajati(int numar) {
+        this.nrAngajati = numar;
+    }
+
+}
+
+class SectieInima extends Spital {
+
+    String sectie() {
+        return "Sectia de inima";
+    }
+
+    int getNrAngajati() {
+        return this.nrAngajati;
+    }
+
+    void setNrAngajati(int numar) {
+        this.nrAngajati = numar;
+    }
+
+}
+
+class SectieStomatologie extends Spital {
+
+    String sectie() {
+        return "Sectia de stomatologie";
+    }
+
+    int getNrAngajati() {
+        return this.nrAngajati;
+    }
+
+    void setNrAngajati(int numar) {
+        this.nrAngajati = numar;
+    }
+
+}
+
+interface Salon
+{
+    int nrScaune = 0;
+    int valoareSalon = 0;
+    
+    public void setDate(int scaune, int val);
+    public String getDate();
+}
+
+class Stomato implements Salon
+{
+    String nume = "Spiridion";
+    private int nrScaune;
+    private int valoareSalon;
+    
+    public void setDate(int scaune, int val)
+    {
+        nrScaune=scaune;
+        valoareSalon=val;
+    }
+    
+    public String getDate() {
+        return "Nr. scaune: " + nrScaune + ", Valoare salon: " + valoareSalon;
+    }
+}
+
+
+public class IPlab1 {
+
+    public static void main(String[] args) {
+        SectieInima inima = new SectieInima();
+        System.out.println(inima.sectie());
+        inima.setNrAngajati(15);
+        System.out.println(inima.getNrAngajati());
+        
+        SectiePlamani plamani = new SectiePlamani();
+        System.out.println(plamani.sectie());
+        plamani.setNrAngajati(1);
+        System.out.println(plamani.getNrAngajati());
+
+        
+        SectieStomatologie stomato = new SectieStomatologie();
+        System.out.println(stomato.sectie());
+        stomato.setNrAngajati(30);
+        System.out.println(stomato.getNrAngajati());
+        System.out.println(stomato.getSpital());
+        System.out.println(stomato.getSpitalAdresa());
+        
+        
+        Stomato stomatoInstance = new Stomato();
+        stomatoInstance.setDate(10, 5000);
+        System.out.println(stomatoInstance.getDate());
+    }
+}

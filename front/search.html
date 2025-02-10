@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="../searchStyle.css">
+</head>
+
+<body>
+    <header>
+        <img src="../Poze/iconRacheta.webp" alt="Logo" class="logo">
+        <form id="searchForm" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input" id="searchQuery">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        <a id="userProfileLink" class="user-icon-link" aria-label="User profile">
+            <img src="../Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+
+    <aside class="sidebar-left" id="sidebar">
+        <button id="postsBtn" class="additional-info-btn">Posts</button>
+        <button id="usersBtn" class="additional-info-btn">Users</button>
+        <button id="logoutBtn" class="additional-info-btn">Logout</button>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Search Results:</h1>
+            <div id="results-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        <button id="myBtn">Upload</button>
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="uploadForm">
+                    <p>Description:</p>
+                    <input type="text" id="description" placeholder="Enter Description" name="description" required>
+                    <p>File:</p>
+                    <input type="file" id="fileUpload" name="fileUpload" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchForm = document.getElementById('searchForm');
+            const resultsContainer = document.getElementById('results-container');
+
+            async function fetchResults(endpoint, query) {
+                if (!query) return;
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`/api/searchResults/${endpoint}?query=${encodeURIComponent(query)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': token ? `Bearer ${token}` : ''
+                        }
+                    });
+
+                    if (response.ok) {
+                        const results = await response.json();
+                        displayResults(results, endpoint);
+                    } else {
+                        resultsContainer.innerHTML = '<p>Error fetching data</p>';
+                    }
+                } catch (error) {
+                    resultsContainer.innerHTML = '<p>Error fetching data</p>';
+                }
+            }
+
+            function displayResults(results, type) {
+                resultsContainer.innerHTML = ''; 
+                results.forEach(result => {
+                    const resultButton = document.createElement('button');
+                    resultButton.classList.add('result-info-btn');
+                    resultButton.textContent = type === 'posts' ? result.description : result.username;
+                    resultButton.onclick = () => {
+                        const token = localStorage.getItem('token');
+                        if (type === 'posts') {
+                            localStorage.setItem("selectedUploadId", result.id);
+                            window.location.href = token ? `/user/searchResult/visitPost` : `/userGuest/searchResult/visitPost`;
+                        } else {
+                            localStorage.setItem("visitName", result.username);
+                            window.location.href = token ? `/user/searchResult/visitUser` : `/userGuest/searchResult/visitUser`;
+                            localStorage.setItem("selectedUploadId", result.id);
+                        }
+                    };
+                    resultsContainer.appendChild(resultButton);
+                });
+            }
+
+            searchForm.addEventListener('submit', event => {
+                event.preventDefault();
+                const query = document.getElementById('searchQuery').value;
+                localStorage.setItem('lastSearchQuery', query);
+                fetchResults('posts', query);
+            });
+
+            document.getElementById('postsBtn').addEventListener('click', () => {
+                const query = localStorage.getItem('lastSearchQuery');
+                fetchResults('posts', query);
+            });
+
+            document.getElementById('usersBtn').addEventListener('click', () => {
+                const query = localStorage.getItem('lastSearchQuery');
+                fetchResults('users', query);
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('token');
+                alert('You have been logged out.');
+                window.location.href = '/';
+            });
+
+            const initialQuery = localStorage.getItem('lastSearchQuery');
+            if (initialQuery) {
+                fetchResults('posts', initialQuery);
+            }
+
+            // Set the correct profile link based on token presence
+            const userProfileLink = document.getElementById('userProfileLink');
+            const token = localStorage.getItem('token');
+            userProfileLink.href = token ? '/user' : '/userGuest';
+        });
+
+    </script>
+
+</body>
+
+</html>

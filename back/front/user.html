@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing Platform</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+<body>
+    <header>
+        <img src="./Poze/rocket-256.png" alt="Logo" class="logo">
+        <form action="/search" method="GET" class="search-form">
+            <input type="text" name="query" placeholder="Search..." class="search-input">
+            <button type="submit" class="search-button">Search</button>
+        </form>
+        <a href="profile.html" class="user-icon-link" aria-label="User profile">
+            <img src="./Poze/icon50px.png" alt="User Icon" class="user-icon">
+        </a>
+    </header>
+
+    <aside class="sidebar-left">
+        <a href="user.html">
+            <button class="home-btn">Home</button>
+        </a>
+        <button class="additional-info-btn">Notifications</button>
+        <button class="additional-info-btn">Favorites</button>
+        <button class="status-message-btn">My group</button>
+        <button class="upload-message-btn">Friends</button>
+        <button class="additional-info-btn">Help</button>
+        <a href="AboutUsLogged.html">
+            <button class="additional-info-btn">About us</button> 
+        </a>
+    </aside>
+
+    <main>
+        <section class="uploads-section">
+            <h1>Your uploads:</h1>
+            <div class="upload-info">
+                <span class="description-label">description</span>
+                <span class="upload-data-label">upload data</span>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Trigger/Open The Modal -->
+        <button id="myBtn">Upload</button>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <form id="uploadForm">
+                    <p>Description:</p>
+                    <input type="text" id="description" placeholder="Enter Description" name="description" required>
+                    <p>File:</p>
+                    <input type="file" id="fileUpload" name="fileUpload" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </footer>
+    <script> document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById("myModal");
+        const btn = document.getElementById("myBtn");
+        const span = document.getElementsByClassName("close")[0];
+        const uploadForm = document.getElementById("uploadForm");
+    
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+    
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    
+        uploadForm.onsubmit = async function(event) {
+            event.preventDefault();
+    
+            const formData = new FormData();
+            formData.append('description', document.getElementById('description').value);
+            formData.append('fileUpload', document.getElementById('fileUpload').files[0]);
+    
+            const token = localStorage.getItem('token');
+    
+            const response = await fetch('/user', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+    
+            const result = await response.json();
+            alert(result.message);
+            if (response.ok) {
+                modal.style.display = "none";
+            }
+        }
+    });
+    
+    </script>
+</body>
+</html>

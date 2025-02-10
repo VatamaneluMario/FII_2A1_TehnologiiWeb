@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Details</title>
+    <link rel="stylesheet" href="../../upload.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-c.min.js"></script>
+    <style>
+        /* (Your existing CSS styles) */
+    </style>
+</head>
+<body>
+    <header>
+        <img src="../../Poze//iconRacheta.webp" alt="Logo" class="logo">
+        <span class="description-title">Description: <span id="description"></span></span>
+        <div class="dropdown-btn" id="dropdownBtn">Menu</div>
+    </header>
+    <div class="content">
+        <aside class="sidebar-left" id="sidebar">
+            <button id="editBtn" class="hidden">Edit</button>
+            <button id="saveBtn" class="hidden">Save</button>
+            <button id="seeContributorsBtn">See Contributors</button>
+            <button id="rollBackBtn" class="rollback-btn">RollBack</button>
+        </aside>
+        <main class="main-content">
+            <pre><code id="textContent" class="language-c"></code></pre>
+        </main>
+    </div>
+
+    <div id="contributorsSeeModal" class="modal">
+        <div class="modal-content">
+            <span class="close contributors-see-close">&times;</span>
+            <h2>Contributors List</h2>
+            <ul id="contributorsSeeList"></ul>
+        </div>
+    </div>
+
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <span class="close save-close">&times;</span>
+            <h2>Add Description</h2>
+            <form id="saveForm">
+                <label for="descriptionInput">Description (max 20 words):</label>
+                <input type="text" id="descriptionInput" maxlength="160" placeholder="Enter description here...">
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="versionModal" class="modal">
+        <div class="modal-content">
+            <span class="close version-close">&times;</span>
+            <h2>Select Version</h2>
+            <div id="versionList"></div>
+        </div>
+    </div>
+
+    <script>
+        const dropdownBtn = document.getElementById('dropdownBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        dropdownBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const uploadId = localStorage.getItem('selectedUploadId');
+            const token = localStorage.getItem('token');
+
+            const headers = {};
+            if (token) {
+                headers['Authorization'] = `Bearer ${token}`;
+            }
+
+            async function checkUserRole(uploadId) {
+                const roleResponse = await fetch(`/api/Contributors/checkRole?uploadId=${uploadId}`, { headers });
+                const role = await roleResponse.json();
+
+                if (role.result) {
+                    document.getElementById('editBtn').classList.remove('hidden');
+                } else {
+                    document.getElementById('editBtn').classList.add('hidden');
+                }
+            }
+
+            await checkUserRole(uploadId);
+
+            const response = await fetch(`/api/uploadsDetails?id=${uploadId}`, { headers });
+
+            if (response.ok) {
+                const uploadDetails = await response.json();
+                document.getElementById('description').textContent = uploadDetails.description;
+                document.getElementById('textContent').textContent = uploadDetails.text;
+                Prism.highlightAll();
+            } else {
+                alert('Error fetching upload details.');
+            }
+            
+
+            // Ensure the contributors modal is hidden initially
+            document.getElementById('contributorsSeeModal').style.display = 'none';
+
+            // Event listener for "See Contributors" button
+            document.getElementById('seeContributorsBtn').addEventListener('click', async () => {
+                const fetchResponse = await fetch(`/api/Contributors?uploadId=${uploadId}`, {
+                    method: 'GET',
+                    headers
+                });
+
+                if (fetchResponse.ok) {
+                    const contributors = await fetchResponse.json();
+                    const contributorsSeeList = document.getElementById('contributorsSeeList');
+                    contributorsSeeList.innerHTML = ''; // Clear existing list items
+                    contributors.forEach(contributor => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = contributor;
+                        contributorsSeeList.appendChild(listItem);
+                    });
+                    document.getElementById('contributorsSeeModal').style.display = 'flex';
+                } else {
+                    alert('Failed to fetch contributors.');
+                }
+            });
+
+            document.querySelector('.contributors-see-close').addEventListener('click', () => {
+                document.getElementById('contributorsSeeModal').style.display = 'none';
+            });
+
+            window.onclick = function (event) {
+                const contributorsSeeModal = document.getElementById('contributorsSeeModal');
+                if (event.target == contributorsSeeModal) {
+                    contributorsSeeModal.style.display = 'none';
+                }
+            };
+
+            document.getElementById('editBtn').addEventListener('click', () => {
+                document.getElementById('textContent').contentEditable = 'true';
+                document.getElementById('textContent').focus();
+                document.getElementById('editBtn').classList.add('hidden');
+                document.getElementById('saveBtn').classList.remove('hidden');
+            });
+
+            document.getElementById('saveBtn').addEventListener('click', () => {
+                document.getElementById('saveModal').style.display = 'flex';
+            });
+
+            document.querySelector('.save-close').onclick = function () {
+                document.getElementById('saveModal').style.display = 'none';
+            };
+
+            document.getElementById('saveForm').addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const newText = document.getElementById('textContent').textContent;
+                const description = document.getElementById('descriptionInput').value;
+
+                const updateResponse = await fetch(`/api/uploadsDetails?id=${uploadId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: newText,
+                        description: description
+                    })
+                });
+
+                if (updateResponse.ok) {
+                    alert('Upload updated successfully.');
+                    document.getElementById('textContent').contentEditable = 'false';
+                    document.getElementById('editBtn').classList.remove('hidden');
+                    document.getElementById('saveBtn').classList.add('hidden');
+                    document.getElementById('saveModal').style.display = 'none';
+                } else {
+                    alert('Error updating upload.');
+                }
+            });
+
+            const rollBackBtn = document.getElementById('rollBackBtn');
+            const versionModal = document.getElementById('versionModal');
+            const versionClose = document.querySelector('.version-close');
+
+            rollBackBtn.addEventListener('click', async () => {
+                const rollBackResponse = await fetch(`/api/uploadsDetails/rollBack?id=${uploadId}`, {
+                    method: 'GET',
+                    headers
+                });
+
+                if (rollBackResponse.ok) {
+                    const versions = await rollBackResponse.json();
+                    const versionList = document.getElementById('versionList');
+                    versionList.innerHTML = '';
+                    versions.forEach((version, index) => {
+                        const button = document.createElement('button');
+                        button.className = 'version-button';
+                        let desc = version.description ? ` - ${version.description}` : '';
+                        let date = version.date ? ` - ${new Date(version.date).toLocaleDateString()}` : '';
+                        button.textContent = `Version ${index + 1}${desc}${date}`;
+
+                        button.addEventListener('click', async () => {
+                            const versionResponse = await fetch(`/api/uploadsDetails/rollBack/oldVersion?id=${version.id}`, {
+                                method: 'GET',
+                                headers
+                            });
+
+                            if (versionResponse.ok) {
+                                const versionDetails = await versionResponse.json();
+                                document.getElementById('description').textContent = versionDetails.description;
+                                document.getElementById('textContent').textContent = versionDetails.textContent;
+                                Prism.highlightAll();
+                                versionModal.style.display = 'none';
+
+                                // Only check user role if this is the latest version
+                                if (index === versions.length - 1) {
+                                    await checkUserRole(uploadId);
+                                } else {
+                                    document.getElementById('editBtn').classList.add('hidden');
+                                }
+                            } else {
+                                alert('Error fetching version details.');
+                            }
+                        });
+                        versionList.appendChild(button);
+                    });
+                    versionModal.style.display = 'flex';
+                } else {
+                    alert('Error fetching versions.');
+                }
+            });
+
+            versionClose.onclick = function () {
+                versionModal.style.display = 'none';
+            };
+
+            window.onclick = function (event) {
+                if (event.target == versionModal) {
+                    versionModal.style.display = 'none';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
